@@ -2,6 +2,7 @@ package org.example.toyroom;
 
 
 import org.example.toyroom.models.*;
+import org.example.toyroom.repository.ToyRepository;
 import org.example.toyroom.units.ToyColorComparator;
 import org.example.toyroom.units.ToyFinder;
 import org.example.toyroom.units.ToySizeComparator;
@@ -17,6 +18,8 @@ public class ToyRoom implements Room {
 
     private List<Toy> toyList;
     private String filePath = "D:\\java_projects\\playRoomData.txt";
+    private final ToyRepository toyRepository = new ToyRepository();
+
 
     public ToyRoom(){
         this.toyList = new ArrayList<>();
@@ -39,12 +42,12 @@ public class ToyRoom implements Room {
             switch (input) {
                 case 1 -> {
                     Toy toy = createToy();
-                    toyList.add(toy);
+                    toyRepository.save(toy);
                     System.out.println("\nToy was added");
                 }
                 case 2 -> {
-                    toyList.addAll(readFile());
-                    System.out.println("File was read");
+                    if(readFile())
+                        System.out.println("File was read");
                 }
                 case 3 -> {
                     return;
@@ -61,32 +64,35 @@ public class ToyRoom implements Room {
         System.out.println("Size:");
         Size size = parseSize(Input.getString());
         System.out.println("color:");
-        String color = Input.getString().toLowerCase();
-        return new Toy(type, size, color);
+        String hex = Input.getString().toLowerCase();
+        Color color = new Color(hex);
+        System.out.println("Material:");
+        String material = Input.getString().toLowerCase();
+        return new Toy(type, size, color, material);
     }
 
-    public List<Toy> readFile(){
-        List<Toy> toys = new ArrayList<>();
+    public boolean readFile(){
         try {
             List<String> lines = Files.readAllLines(Paths.get(filePath));
             for (String line : lines) {
                 String[] details = line.split(",");
                 String type = details[0];
                 Size size = parseSize(details[1]);
-                String color = details[2].toLowerCase();
-//                String material = details[3];
-//                Double cost = Double.valueOf(details[4]);
-                toys.add(new Toy(type, size, color));
+                String hex = details[2].toLowerCase();
+                Color color = new Color(hex);
+                String material = details[3];
+                toyRepository.save(new Toy(type, size, color, material));
             }
+            return true;
         }catch (IOException e){
             e.printStackTrace();
         }
-        return toys;
+        return false;
     }
 
     private static Size parseSize(String sizeStr){
         switch(sizeStr.toLowerCase()){
-            case "big": return Size.BIG;
+            case "large": return Size.LARGE;
             case "medium": return Size.MEDIUM;
             case "small": return Size.SMALL;
             default: throw new IllegalArgumentException("Invalid Size: " + sizeStr);
@@ -95,15 +101,10 @@ public class ToyRoom implements Room {
 
     @Override
     public void show() {
-        System.out.println(this);
-        System.out.println("\nRoom was shown");
+        List<Toy> toys = toyRepository.findAll();
+        System.out.println("\nToy room\n" + toys);
     }
 
-    @Override
-    public String toString() {
-        return "\nToy room " +
-                "\ntoyList=" + toyList;
-    }
 
     @Override
     public void find() {
@@ -114,39 +115,24 @@ public class ToyRoom implements Room {
                     
                     2. Find by color\
                     
-                    3. Find by all\
-                    
-                    4. Back""");
+                    3. Back""");
 
              int input = Input.getInteger();
              switch(input){
                  case 1 -> {
                      System.out.println("size:");
                      Size size = parseSize(Input.getString());
-                     List<Toy> foundToys = ToyFinder.findToysBySize(toyList, size);
+                     List<Toy> foundToys = toyRepository.findBySize(size);
                      System.out.println(foundToys);
                  }
                  case 2 -> {
                      System.out.println("color:");
-                     String color = Input.getString();
-                     List<Toy> foundToys = ToyFinder.findToysByColor(toyList, color);
+                     String hex = Input.getString();
+                     Color color = new Color(hex);
+                     List<Toy> foundToys = toyRepository.findByColor(color);
                      System.out.println(foundToys);
                  }
                  case 3 -> {
-                     System.out.println("size:");
-                     Size size = parseSize(Input.getString());
-                     System.out.println("color:");
-                     String color = Input.getString();
-                     List<Toy> foundToys = ToyFinder.findToysByColorAndSize(toyList, color, size, false);
-                     System.out.println(foundToys);
-
-                     System.out.println("more(y/n):");
-                     if (Input.getString().equals("y")){
-                         List<Toy> foundToysOr = ToyFinder.findToysByColorAndSize(toyList, color, size, true);
-                         System.out.println(foundToysOr);
-                     }
-                 }
-                 case 4 -> {
                      return;
                  }
                  default -> System.out.println("Try again");
@@ -158,7 +144,7 @@ public class ToyRoom implements Room {
     @Override
     public void sort() {
 
-        List<Toy> toys = new ArrayList<>(List.copyOf(toyList));
+        List<Toy> toys = toyRepository.findAll();
         while(true){
             System.out.println("""
                     
@@ -187,14 +173,20 @@ public class ToyRoom implements Room {
 
     @Override
     public void delete() {
-        System.out.println("Choose toy:" +
-                toyList);
+        System.out.println("Choose toy:\n");
+
+        List<Toy> toys = toyRepository.findAll();
+        for (int i = 0; i < toys.size(); i++) {
+            System.out.println((i + 1) + ". " + toys.get(i));
+        }
+
         int index;
         do {
             index = Input.getInteger();
-        } while (0 >= index || index > toyList.size());
+        } while (0 >= index || index > toys.size());
 
-        toyList.remove(index - 1);
+        int toyId = toys.get(index - 1).getId();
+        toyRepository.deleteById(toyId);
         System.out.println("Toy was deleted");
     }
 

@@ -16,15 +16,15 @@ public class ToyFinder {
 
     public static List<Toy> findToysByColor(List<Toy> toys, String color){
         return toys.stream()
-                .filter(toy -> toy.getColor().equalsIgnoreCase(color))
+                .filter(toy -> toy.getColor().getHexCode().equalsIgnoreCase(color))
                 .collect(Collectors.toList());
     }
 
     public static List<Toy> findToysByColorAndSize(List<Toy> toys, String color, Size size, boolean useOr){
         return toys.stream()
                 .filter(toy -> useOr
-                        ? toy.getColor().equalsIgnoreCase(color) || toy.getSize() == size
-                        :toy.getColor().equalsIgnoreCase(color) && toy.getSize() == size)
+                        ? toy.getColor().getHexCode().equalsIgnoreCase(color) || toy.getSize() == size
+                        :toy.getColor().getHexCode().equalsIgnoreCase(color) && toy.getSize() == size)
                 .collect(Collectors.toList());
     }
 }

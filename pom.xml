@@ -29,14 +29,6 @@
         </dependency>
 
 
-        <!-- Lombok для скорочення коду -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.30</version>
-            <scope>provided</scope>
-        </dependency>
-
         <!-- JUnit (optional, for testing) -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
