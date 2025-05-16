@@ -16,13 +16,17 @@ import java.util.List;
 
 public class ToyRoom implements Room {
 
-    private List<Toy> toyList;
+//    private List<Toy> toyList;
     private String filePath = "D:\\java_projects\\playRoomData.txt";
     private final ToyRepository toyRepository = new ToyRepository();
 
 
-    public ToyRoom(){
-        this.toyList = new ArrayList<>();
+//    public ToyRoom(){
+//        this.toyList = new ArrayList<>();
+//    }
+
+    public ToyRepository getToyRepository() {
+        return toyRepository;
     }
 
     @Override
