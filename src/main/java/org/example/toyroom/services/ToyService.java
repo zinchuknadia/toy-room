@@ -15,7 +15,7 @@ public class ToyService {
     }
 
     public void addToy(Toy toy) {
-        toyRepository.save(toy);
+        toyRepository.add(toy);
     }
 
     public void deleteToy(int id) {

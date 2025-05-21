@@ -1,0 +1,13 @@
+.menu-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-alignment: CENTER_LEFT;
+    -fx-pref-width: 150px;
+    -fx-graphic-text-gap: 10px;
+}
+
+.menu-button:hover {
+    -fx-background-color: #4B3F8C;
+    -fx-cursor: hand;
+}

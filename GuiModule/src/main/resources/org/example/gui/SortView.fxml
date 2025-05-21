@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox fx:controller="org.example.gui.SortViewController"
+        spacing="10" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/21.0.7">
+    <HBox spacing="10">
+        <Button text="Sort by Color" onAction="#onSortByColor"/>
+        <Button text="Sort by Size" onAction="#onSortBySize"/>
+    </HBox>
+    <TableView fx:id="toyTable">
+        <columns>
+            <TableColumn text="Type" fx:id="typeCol"/>
+            <TableColumn text="Size" fx:id="sizeCol"/>
+            <TableColumn text="Color" fx:id="colorCol"/>
+            <TableColumn text="Material" fx:id="materialCol"/>
+        </columns>
+    </TableView>
+</VBox>

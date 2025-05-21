@@ -1,21 +1,25 @@
 package org.example.gui;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.layout.StackPane;
 import org.example.toyroom.ToyRoom;
 import org.example.toyroom.models.Toy;
+
+import java.io.IOException;
 
 public class MainViewController {
 
     private ToyRoom toyRoom;
 
-    @FXML private TableView<Toy> toyTable;
-    @FXML private TableColumn<Toy, String> typeCol;
-    @FXML private TableColumn<Toy, String> sizeCol;
-    @FXML private TableColumn<Toy, String> colorCol;
-    @FXML private TableColumn<Toy, String> materialCol;
+    @FXML private StackPane contentPane;
+//    @FXML private TableColumn<Toy, String> typeCol;
+//    @FXML private TableColumn<Toy, String> sizeCol;
+//    @FXML private TableColumn<Toy, String> colorCol;
+//    @FXML private TableColumn<Toy, String> materialCol;
 
     private final ObservableList<Toy> toys = FXCollections.observableArrayList();
 
@@ -24,15 +28,15 @@ public class MainViewController {
         refreshTable();
     }
 
-    @FXML
-    public void initialize() {
-        typeCol.setCellValueFactory(cellData -> cellData.getValue().typeProperty());
-        sizeCol.setCellValueFactory(cellData -> cellData.getValue().sizeProperty().asString());
-        colorCol.setCellValueFactory(cellData -> cellData.getValue().colorProperty().asString());
-        materialCol.setCellValueFactory(cellData -> cellData.getValue().materialProperty());
-
-        toyTable.setItems(toys);
-    }
+//    @FXML
+//    public void initialize() {
+//        typeCol.setCellValueFactory(cellData -> cellData.getValue().typeProperty());
+//        sizeCol.setCellValueFactory(cellData -> cellData.getValue().sizeProperty().asString());
+//        colorCol.setCellValueFactory(cellData -> cellData.getValue().colorProperty().asString());
+//        materialCol.setCellValueFactory(cellData -> cellData.getValue().materialProperty());
+//
+//        toyTable.setItems(toys);
+//    }
 
     private void refreshTable() {
         toys.setAll(toyRoom.getToyRepository().findAll());
@@ -40,8 +44,7 @@ public class MainViewController {
 
     @FXML
     public void onAddToy() {
-        toyRoom.add(); // у майбутньому — діалогове вікно
-        refreshTable();
+        loadContent("AddToyView.fxml");
     }
 
     @FXML
@@ -52,19 +55,17 @@ public class MainViewController {
 
     @FXML
     public void onFindToy() {
-        toyRoom.find(); // у майбутньому — нове вікно або діалог
+        loadContent("FindView.fxml");
     }
 
     @FXML
     public void onSortToys() {
-        toyRoom.sort();
-        refreshTable();
+        loadContent("SortView.fxml");
     }
 
     @FXML
     public void onDeleteToy() {
-        toyRoom.delete();
-        refreshTable();
+        loadContent("DeleteView.fxml");
     }
 
     @FXML
@@ -72,4 +73,22 @@ public class MainViewController {
         toyRoom.exit();
         System.exit(0);
     }
+
+    private void loadContent(String fxmlPath) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+            Node node = loader.load();
+
+            // передаємо ToyRoom у підлеглий контролер, якщо треба
+            Object controller = loader.getController();
+            if (controller instanceof ToyRoomAware) {
+                ((ToyRoomAware) controller).setToyRoom(toyRoom);
+            }
+
+            contentPane.getChildren().setAll(node);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

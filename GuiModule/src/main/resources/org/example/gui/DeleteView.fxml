@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane fx:controller="org.example.gui.DeleteViewController"
+        xmlns:fx="http://javafx.com/fxml">
+    <top>
+        <VBox spacing="10">
+        <padding>
+            <Insets top="10" right="10" bottom="10" left="10"/>
+        </padding>
+        <Label text="Delete Toy by ID" style="-fx-font-size: 16px;"/>
+            <HBox spacing="10">
+                <Label text="Toy ID:"/>
+                <TextField fx:id="idField" promptText="Enter ID"/>
+                <Button text="Delete" onAction="#onDelete"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <center>
+        <TableView fx:id="toyTable" prefHeight="300">
+            <columns>
+                <TableColumn fx:id="idCol" text="ID"/>
+                <TableColumn fx:id="typeCol" text="Type"/>
+                <TableColumn fx:id="sizeCol" text="Size"/>
+                <TableColumn fx:id="colorCol" text="Color"/>
+                <TableColumn fx:id="materialCol" text="Material"/>
+            </columns>
+        </TableView>
+    </center>
+</BorderPane>

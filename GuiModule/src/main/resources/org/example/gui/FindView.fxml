@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox fx:controller="org.example.gui.FindViewController"
+        spacing="10" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/21.0.7">
+
+    <HBox spacing="10">
+        <Label text="Type:"/>
+        <TextField fx:id="typeField"/>
+        <Button text="Find by Type" onAction="#onFindByType"/>
+    </HBox>
+
+    <HBox spacing="10">
+        <Label text="Size:"/>
+        <ComboBox fx:id="sizeComboBox"/>
+        <Button text="Find by Size" onAction="#onFindBySize"/>
+    </HBox>
+
+    <TableView fx:id="toyTable" prefHeight="400">
+        <columns>
+            <TableColumn text="Type" fx:id="typeCol"/>
+            <TableColumn text="Size" fx:id="sizeCol"/>
+            <TableColumn text="Color" fx:id="colorCol"/>
+            <TableColumn text="Material" fx:id="materialCol"/>
+        </columns>
+    </TableView>
+</VBox>

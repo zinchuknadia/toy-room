@@ -17,7 +17,7 @@ import java.util.List;
 public class ToyRoom implements Room {
 
 //    private List<Toy> toyList;
-    private String filePath = "D:\\java_projects\\playRoomData.txt";
+    private String filePath = "D:\\java_projects\\ToyRoom\\playRoomData.txt";
     private final ToyRepository toyRepository = new ToyRepository();
 
 
@@ -46,7 +46,7 @@ public class ToyRoom implements Room {
             switch (input) {
                 case 1 -> {
                     Toy toy = createToy();
-                    toyRepository.save(toy);
+                    toyRepository.add(toy);
                     System.out.println("\nToy was added");
                 }
                 case 2 -> {
@@ -85,7 +85,7 @@ public class ToyRoom implements Room {
                 String hex = details[2].toLowerCase();
                 Color color = new Color(hex);
                 String material = details[3];
-                toyRepository.save(new Toy(type, size, color, material));
+                toyRepository.add(new Toy(type, size, color, material));
             }
             return true;
         }catch (IOException e){

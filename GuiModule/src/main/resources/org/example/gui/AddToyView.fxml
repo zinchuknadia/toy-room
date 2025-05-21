@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox fx:controller="org.example.gui.AddToyController"
+        spacing="10" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/21.0.7">
+    <TextField fx:id="typeField" promptText="Type"/>
+    <TextField fx:id="sizeField" promptText="Size"/>
+    <TextField fx:id="colorField" promptText="Color"/>
+    <TextField fx:id="materialField" promptText="Material"/>
+    <Button text="Add Toy" onAction="#handleAddToy"/>
+</VBox>
