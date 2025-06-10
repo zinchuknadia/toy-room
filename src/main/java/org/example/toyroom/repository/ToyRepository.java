@@ -11,7 +11,7 @@ import java.util.List;
 import org.example.DatabaseConnector;
 import org.example.toyroom.models.Color;
 import org.example.toyroom.models.Size;
-import org.example.toyroom.models.Toy;
+import org.example.toyroom.models.toys.Toy;
 
 public class ToyRepository {
 

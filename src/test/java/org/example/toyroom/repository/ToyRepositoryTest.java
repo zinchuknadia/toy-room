@@ -2,7 +2,7 @@ package org.example.toyroom.repository;
 
 import org.example.toyroom.models.Color;
 import org.example.toyroom.models.Size;
-import org.example.toyroom.models.Toy;
+import org.example.toyroom.models.toys.Toy;
 import org.junit.jupiter.api.*;
 
 import java.sql.*;

@@ -1,5 +1,6 @@
 package org.example.toyroom.models;
 
+import org.example.toyroom.models.toys.Toy;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 

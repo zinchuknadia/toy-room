@@ -1,6 +1,8 @@
-package org.example.toyroom.models;
+package org.example.toyroom.models.toys;
 
 import javafx.beans.property.*;
+import org.example.toyroom.models.Color;
+import org.example.toyroom.models.Size;
 
 public class Toy {
     private int id;
@@ -13,7 +15,14 @@ public class Toy {
 
     public Toy(){}
 
-    public Toy(String type, Size size, Color color, String material, double price) {
+    public Toy(String type, Size size, Color color, String material) {
+        this.type.set(type);
+        this.size.set(size);
+        this.color.set(color);
+        this.material.set(material);
+    }
+
+    public Toy(String type, Size size, Color color, String material, Double price) {
         this.type.set(type);
         this.size.set(size);
         this.color.set(color);

@@ -3,7 +3,7 @@ package org.example.toyroom.service;
 import org.example.toyroom.ToyRoom;
 import org.example.toyroom.models.Color;
 import org.example.toyroom.models.Size;
-import org.example.toyroom.models.Toy;
+import org.example.toyroom.models.toys.Toy;
 import org.example.toyroom.repository.ToyRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

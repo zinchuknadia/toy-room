@@ -5,7 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import org.example.toyroom.ToyRoom;
-import org.example.toyroom.models.Toy;
+import org.example.toyroom.models.toys.Toy;
 
 public class DeleteViewController implements ToyRoomAware {
 

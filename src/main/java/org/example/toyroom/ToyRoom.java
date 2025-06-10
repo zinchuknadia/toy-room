@@ -4,7 +4,7 @@ package org.example.toyroom;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import org.example.toyroom.models.*;
-import org.example.toyroom.models.Toy;
+import org.example.toyroom.models.toys.Toy;
 import org.example.toyroom.service.ToyService;
 
 import java.io.IOException;

@@ -8,7 +8,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.example.toyroom.ToyRoom;
 import org.example.toyroom.models.Size;
-import org.example.toyroom.models.Toy;
+import org.example.toyroom.models.toys.Toy;
 import org.example.toyroom.service.ToyService;
 
 public class FindViewController implements ToyRoomAware{

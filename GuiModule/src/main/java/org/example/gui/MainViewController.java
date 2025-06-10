@@ -9,7 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import org.example.toyroom.ToyRoom;
-import org.example.toyroom.models.Toy;
+import org.example.toyroom.models.toys.Toy;
 
 import java.io.IOException;
 import java.util.List;

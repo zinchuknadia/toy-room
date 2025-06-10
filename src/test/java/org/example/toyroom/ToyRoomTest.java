@@ -1,7 +1,7 @@
 package org.example.toyroom;
 
 import org.example.toyroom.models.Size;
-import org.example.toyroom.models.Toy;
+import org.example.toyroom.models.toys.Toy;
 import org.example.toyroom.repository.ToyRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
