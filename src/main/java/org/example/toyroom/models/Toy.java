@@ -11,11 +11,6 @@ public class Toy {
     private final StringProperty material = new SimpleStringProperty();
     private final DoubleProperty price = new SimpleDoubleProperty();
 
-//    private String type;
-//    private Size size;
-//    private Color color;
-//    private String material;
-
     public Toy(){}
 
     public Toy(String type, Size size, Color color, String material, double price) {

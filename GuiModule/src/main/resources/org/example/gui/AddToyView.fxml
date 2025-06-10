@@ -20,6 +20,7 @@
             <TextField fx:id="sizeField" promptText="Size" styleClass="form-field"/>
             <TextField fx:id="colorField" promptText="Color" styleClass="form-field"/>
             <TextField fx:id="materialField" promptText="Material" styleClass="form-field"/>
+            <TextField fx:id="priceField" promptText="Price" styleClass="form-field"/>
 
             <Button text="Add Toy" onAction="#handleAddToy" styleClass="form-button"/>
         </VBox>

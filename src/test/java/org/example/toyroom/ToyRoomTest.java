@@ -1,6 +1,5 @@
 package org.example.toyroom;
 
-import org.example.toyroom.models.Color;
 import org.example.toyroom.models.Size;
 import org.example.toyroom.models.Toy;
 import org.example.toyroom.repository.ToyRepository;

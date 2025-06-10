@@ -14,12 +14,10 @@ public class MainApp extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         logger.error("MainApp test logger");
+
+        // Proceed with main view
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/gui/MainView.fxml"));
         Scene scene = new Scene(loader.load(),900,500);
-
-        // передати ToyRoom у контролер
-        MainViewController controller = loader.getController();
-        controller.setToyRoom(new ToyRoom());
 
         primaryStage.setTitle("Toy Room");
         primaryStage.setScene(scene);

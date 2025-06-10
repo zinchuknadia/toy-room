@@ -15,6 +15,14 @@
             <Button fx:id="findToyButton" text="Find Toy" onAction="#onFindToy" styleClass="menu-btn" />
             <Button fx:id="sortToysButton" text="Sort Toys" onAction="#onSortToys" styleClass="menu-btn" />
             <Button fx:id="deleteToyButton" text="Delete Toy" onAction="#onDeleteToy" styleClass="menu-btn" />
+            <Button fx:id="editBudgetButton" text="Edit Budget" onAction="#handleEditBudget" styleClass="menu-btn" />
+
+            <Region VBox.vgrow="ALWAYS" />
+
+            <VBox fx:id="budgetDisplayBox" alignment="BOTTOM_LEFT" spacing="5" styleClass="budget-box">
+                <Label text="Budget:" styleClass="budget-title"/>
+                <Label fx:id="budgetLabel" text=" " styleClass="budget-value"/>
+            </VBox>
         </VBox>
     </left>
 

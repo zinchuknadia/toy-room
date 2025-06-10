@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.geometry.Pos?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane fx:controller="org.example.gui.BudgetEditorController"
+            xmlns:fx="http://javafx.com/fxml/1"
+            xmlns="http://javafx.com/javafx/21.0.7"
+            stylesheets="@styles.css">
+
+    <center>
+        <VBox spacing="10" alignment="CENTER" maxWidth="300">
+            <padding>
+                <Insets top="40" right="20" bottom="20" left="20"/>
+            </padding>
+
+            <Label text="Edit Budget" styleClass="form-title"/>
+            <Label fx:id="currentBudgetLabel" text="Current Budget: $" styleClass="form-field"/>
+
+            <TextField fx:id="amountField" promptText="Enter amount" styleClass="form-field"/>
+
+            <HBox spacing="10" alignment="CENTER">
+                <Button text="Add" onAction="#handleAdd" styleClass="form-button"/>
+                <Button text="Subtract" onAction="#handleSubtract" styleClass="form-button"/>
+            </HBox>
+        </VBox>
+    </center>
+</BorderPane>
