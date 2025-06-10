@@ -6,11 +6,13 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.example.toyroom.ToyRoom;
 import org.example.toyroom.models.Size;
 import org.example.toyroom.models.Toy;
 import org.example.toyroom.repository.ToyRepository;
+import org.example.toyroom.service.ToyService;
 
-public class FindViewController {
+public class FindViewController implements ToyRoomAware{
 
     @FXML
     private TextField typeField;
@@ -27,11 +29,24 @@ public class FindViewController {
     @FXML
     private TableColumn<Toy, String> materialCol;
 
-    private final ToyRepository toyRepository = new ToyRepository();
+    private ToyRoom toyRoom;
+    private final ToyService toyService = new ToyService(toyRoom);
+
+    @Override
+    public void setToyRoom(ToyRoom toyRoom) {
+        this.toyRoom = toyRoom;
+    }
 
     @FXML
     public void initialize() {
         sizeComboBox.setItems(FXCollections.observableArrayList(Size.values()));
+
+        sizeComboBox.valueProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                ObservableList<Toy> toys = FXCollections.observableArrayList(toyService.findBySize(newVal));
+                toyTable.setItems(toys);
+            }
+        });
 
         typeCol.setCellValueFactory(cellData ->
                 new SimpleStringProperty(cellData.getValue().getType()));
@@ -46,12 +61,11 @@ public class FindViewController {
                 new SimpleStringProperty(cellData.getValue().getMaterial()));
     }
 
-
     @FXML
     private void onFindByType() {
         String type = typeField.getText().trim();
         if (!type.isEmpty()) {
-            ObservableList<Toy> toys = FXCollections.observableArrayList(toyRepository.findByType(type));
+            ObservableList<Toy> toys = FXCollections.observableArrayList(toyService.findByType(type));
             toyTable.setItems(toys);
         }
     }
@@ -60,8 +74,9 @@ public class FindViewController {
     private void onFindBySize() {
         Size size = sizeComboBox.getValue();
         if (size != null) {
-            ObservableList<Toy> toys = FXCollections.observableArrayList(toyRepository.findBySize(size));
+            ObservableList<Toy> toys = FXCollections.observableArrayList(toyService.findBySize(size));
             toyTable.setItems(toys);
         }
     }
+
 }

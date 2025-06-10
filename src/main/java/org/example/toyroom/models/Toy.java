@@ -1,9 +1,6 @@
 package org.example.toyroom.models;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 
 public class Toy {
     private int id;
@@ -12,6 +9,7 @@ public class Toy {
     private final ObjectProperty<Size> size = new SimpleObjectProperty<>();
     private final ObjectProperty<Color> color = new SimpleObjectProperty<>();
     private final StringProperty material = new SimpleStringProperty();
+    private final DoubleProperty price = new SimpleDoubleProperty();
 
 //    private String type;
 //    private Size size;
@@ -20,11 +18,12 @@ public class Toy {
 
     public Toy(){}
 
-    public Toy(String type, Size size, Color color, String material) {
+    public Toy(String type, Size size, Color color, String material, double price) {
         this.type.set(type);
         this.size.set(size);
         this.color.set(color);
         this.material.set(material);
+        this.price.set(price);
     }
 
     // ======= ID — тільки для БД =======
@@ -88,12 +87,26 @@ public class Toy {
         return material;
     }
 
+    // ======== Price =========
+    public double getPrice() {
+        return price.get();
+    }
+
+    public void setPrice(double price) {
+        this.price.set(price);
+    }
+
+    public DoubleProperty priceProperty() {
+        return price;
+    }
+
     @Override
     public String toString() {
         return "\n" +
-                "type= " + type +
-                ", Size= " + size +
-                ", color=" + color;
+                "type=" + type.get() +
+                ", size=" + size.get() +
+                ", color=" + color.get() +
+                ", material=" + material.get() +
+                ", price=" + price.get();
     }
-
 }

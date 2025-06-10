@@ -5,16 +5,16 @@
 
 <BorderPane fx:id="mainPane" xmlns:fx="http://javafx.com/fxml/1"
             xmlns="http://javafx.com/javafx/21.0.7"
-            fx:controller="org.example.gui.MainViewController">
+            fx:controller="org.example.gui.MainViewController"
+            stylesheets="@styles.css">
 
     <left>
-        <VBox spacing="10" style="-fx-background-color: #2c2f3a; -fx-padding: 20;">
-            <Button text="Add Toy" onAction="#onAddToy" style="-fx-text-fill: white; -fx-background-color: transparent;" />
-            <Button text="Read File" onAction="#onReadFile" style="-fx-text-fill: white; -fx-background-color: transparent;" />
-            <Button text="Find Toy" onAction="#onFindToy" style="-fx-text-fill: white; -fx-background-color: transparent;" />
-            <Button text="Sort Toys" onAction="#onSortToys" style="-fx-text-fill: white; -fx-background-color: transparent;" />
-            <Button text="Delete Toy" onAction="#onDeleteToy" style="-fx-text-fill: white; -fx-background-color: transparent;" />
-            <Button text="Exit" onAction="#onExit" style="-fx-text-fill: white; -fx-background-color: transparent;" />
+        <VBox styleClass="menu-button" spacing="10" style="-fx-background-color: #2c2f3a; -fx-padding: 40;">
+            <Button fx:id="addToyButton" text="Add Toy" onAction="#onAddToy" styleClass="menu-btn" />
+            <Button fx:id="readFileButton" text="Read File" onAction="#onReadFile" styleClass="menu-btn" />
+            <Button fx:id="findToyButton" text="Find Toy" onAction="#onFindToy" styleClass="menu-btn" />
+            <Button fx:id="sortToysButton" text="Sort Toys" onAction="#onSortToys" styleClass="menu-btn" />
+            <Button fx:id="deleteToyButton" text="Delete Toy" onAction="#onDeleteToy" styleClass="menu-btn" />
         </VBox>
     </left>
 

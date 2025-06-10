@@ -16,6 +16,7 @@ public class AddToyController implements ToyRoomAware {
     @FXML private TextField sizeField;
     @FXML private TextField colorField;
     @FXML private TextField materialField;
+    @FXML private TextField priceField;
 
     @Override
     public void setToyRoom(ToyRoom toyRoom) {
@@ -28,6 +29,7 @@ public class AddToyController implements ToyRoomAware {
         String sizeStr = sizeField.getText();
         String colorStr = colorField.getText();
         String material = materialField.getText();
+        String priceStr = priceField.getText();
 
         if (type.isEmpty() || sizeStr.isEmpty() || colorStr.isEmpty() || material.isEmpty()) {
             showAlert("Please fill in all fields.");
@@ -37,8 +39,9 @@ public class AddToyController implements ToyRoomAware {
         try {
             Size size = parseSize(sizeStr);
             Color color = new Color(colorStr.toLowerCase());
-            Toy toy = new Toy(type, size, color, material);
-            toyRoom.getToyRepository().add(toy);
+            double price = Double.parseDouble(priceStr);
+            Toy toy = new Toy(type, size, color, material, price);
+            toyRoom.getToyService().buyToy(toy);
             showAlert("Toy added successfully!");
             clearFields();
         } catch (NumberFormatException e) {
@@ -60,6 +63,7 @@ public class AddToyController implements ToyRoomAware {
         sizeField.clear();
         colorField.clear();
         materialField.clear();
+        priceField.clear();
     }
 
     private void showAlert(String message) {

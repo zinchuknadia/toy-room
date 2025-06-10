@@ -1,6 +1,5 @@
 package org.example.gui;
 
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -8,19 +7,21 @@ import javafx.scene.control.*;
 import org.example.toyroom.ToyRoom;
 import org.example.toyroom.models.Toy;
 
-public class DeleteViewController implements ToyRoomAware {
+import java.util.Collections;
+import java.util.List;
 
-    @FXML private TextField idField;
+public class ReadFileViewController implements ToyRoomAware {
+
     @FXML private TableView<Toy> toyTable;
     @FXML private TableColumn<Toy, Integer> idCol;
     @FXML private TableColumn<Toy, String> typeCol;
     @FXML private TableColumn<Toy, String> sizeCol;
     @FXML private TableColumn<Toy, String> colorCol;
     @FXML private TableColumn<Toy, String> materialCol;
-    @FXML private TableColumn<Toy, String> priceCol;
 
     private final ObservableList<Toy> toys = FXCollections.observableArrayList();
     private ToyRoom toyRoom;
+    private String filePath = "D:\\java_projects\\ToyRoom\\playRoomData.txt";
 
     @Override
     public void setToyRoom(ToyRoom toyRoom) {
@@ -35,40 +36,24 @@ public class DeleteViewController implements ToyRoomAware {
         sizeCol.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getSize().toString()));
         colorCol.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getColor().getHexCode()));
         materialCol.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getMaterial()));
-        priceCol.setCellValueFactory(data -> {
-            double price = data.getValue().getPrice();
-            return new javafx.beans.property.SimpleStringProperty(String.format("%.2f", price));
-        });
 
         toyTable.setItems(toys);
-
-        // Select toy from table and fill the ID field
-        toyTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if (newSelection != null) {
-                idField.setText(String.valueOf(newSelection.getId()));
-            }
-        });
     }
 
     @FXML
-    public void onDelete() {
-        String text = idField.getText();
+    public void onReadFile() {
         try {
-            int id = Integer.parseInt(text);
-            boolean success = toyRoom.getToyService().deleteById(id);
-            if (success) {
-                showAlert("Success", "Toy deleted successfully.", Alert.AlertType.INFORMATION);
-                refreshTable();
-            } else {
-                showAlert("Error", "Toy with ID " + id + " not found.", Alert.AlertType.WARNING);
-            }
-        } catch (NumberFormatException e) {
-            showAlert("Input Error", "Please enter a valid numeric ID.", Alert.AlertType.ERROR);
+            toyRoom.importToysFromFile(filePath);
+            refreshTable();
+        } catch (Exception e) {
+            showAlert("Error", "Failed to import toys:\n" + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
     private void refreshTable() {
-        toys.setAll(toyRoom.getToyService().findAll());
+        List<Toy> loadedToys = toyRoom.getToyService().findAll();
+        Collections.reverse(loadedToys); // показуємо останні зверху
+        toys.setAll(loadedToys);
     }
 
     private void showAlert(String title, String message, Alert.AlertType type) {

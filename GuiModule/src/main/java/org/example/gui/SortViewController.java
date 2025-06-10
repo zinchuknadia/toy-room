@@ -12,11 +12,18 @@ public class SortViewController implements ToyRoomAware {
     private ToyRoom toyRoom;
     private final ObservableList<Toy> toys = FXCollections.observableArrayList();
 
-    @FXML private TableView<Toy> toyTable;
-    @FXML private TableColumn<Toy, String> typeCol;
-    @FXML private TableColumn<Toy, String> sizeCol;
-    @FXML private TableColumn<Toy, String> colorCol;
-    @FXML private TableColumn<Toy, String> materialCol;
+    @FXML
+    private ComboBox<String> sortComboBox;
+    @FXML
+    private TableView<Toy> toyTable;
+    @FXML
+    private TableColumn<Toy, String> typeCol;
+    @FXML
+    private TableColumn<Toy, String> sizeCol;
+    @FXML
+    private TableColumn<Toy, String> colorCol;
+    @FXML
+    private TableColumn<Toy, String> materialCol;
 
     @FXML
     public void initialize() {
@@ -26,6 +33,9 @@ public class SortViewController implements ToyRoomAware {
         materialCol.setCellValueFactory(cell -> cell.getValue().materialProperty());
 
         toyTable.setItems(toys);
+
+        // Populate sort options
+        sortComboBox.getItems().addAll("Color", "Size");
     }
 
     @Override
@@ -34,12 +44,15 @@ public class SortViewController implements ToyRoomAware {
     }
 
     @FXML
-    public void onSortByColor() {
-        toys.setAll(toyRoom.getToyRepository().findAllSortedByColor());
-    }
+    public void onSortChanged() {
+        String choice = sortComboBox.getValue();
+        if (choice == null) return;
 
-    @FXML
-    public void onSortBySize() {
-        toys.setAll(toyRoom.getToyRepository().findAllSortedBySize());
+        switch (choice) {
+            case "Color" -> toys.setAll(toyRoom.getToyService().findAllSortedByColor());
+            case "Size" -> toys.setAll(toyRoom.getToyService().findAllSortedBySize());
+//            case "Type" -> toys.setAll(toyRoom.getToyService().findAllSortedByType());
+            default -> toys.setAll(toyRoom.getToyService().findAll());
+        }
     }
 }

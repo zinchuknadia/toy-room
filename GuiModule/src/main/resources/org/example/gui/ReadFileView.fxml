@@ -4,19 +4,14 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane fx:controller="org.example.gui.DeleteViewController"
-        xmlns:fx="http://javafx.com/fxml">
+<BorderPane fx:controller="org.example.gui.ReadFileViewController"
+            xmlns:fx="http://javafx.com/fxml">
     <top>
         <VBox spacing="10">
-        <padding>
-            <Insets top="10" right="10" bottom="10" left="10"/>
-        </padding>
-        <Label text="Delete Toy by ID" style="-fx-font-size: 16px;"/>
-            <HBox spacing="10">
-                <Label text="Toy ID:"/>
-                <TextField fx:id="idField" promptText="Enter ID"/>
-                <Button text="Delete" onAction="#onDelete" styleClass="form-button"/>
-            </HBox>
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <Button text="Read File" onAction="#onReadFile" styleClass="form-button"/>
         </VBox>
     </top>
 
@@ -31,7 +26,6 @@
                 <TableColumn fx:id="sizeCol" text="Size"/>
                 <TableColumn fx:id="colorCol" text="Color"/>
                 <TableColumn fx:id="materialCol" text="Material"/>
-                <TableColumn fx:id="priceCol" text="Price" />
             </columns>
         </TableView>
     </center>

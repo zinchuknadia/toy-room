@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="true">
+
+    <!-- Console Appender -->
+    <appender name="ConsoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>[%level] %logger{10} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Rolling File Appender -->
+    <appender name="FileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/app.log</file>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/app-%d{yyyy-MM-dd}.log</fileNamePattern>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Email Appender -->
+    <appender name="EmailAppender" class="ch.qos.logback.classic.net.SMTPAppender">
+        <smtpHost>smtp.gmail.com</smtpHost>
+        <smtpPort>587</smtpPort>
+        <STARTTLS>true</STARTTLS>
+        <ssl>false</ssl>
+        <username>zinchuknadia4@gmail.com</username>
+        <!--    <username>example@gmail.com</username>-->
+
+        <password>dlvgxlqmyaxmgwnf</password>
+
+        <to>zinchuknadia4@gmail.com</to>
+        <from>zinchuknadia4@gmail.com</from>
+        <subject>[Error] %logger{20} - %level</subject>
+
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </layout>
+
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+    </appender>
+    <logger name="ch.qos.logback.classic.net.SMTPAppender" level="DEBUG"/>
+
+    <!-- Application-specific Logger -->
+    <logger name="org.example" level="DEBUG">
+        <appender-ref ref="ConsoleAppender"/>
+        <appender-ref ref="FileAppender"/>
+        <appender-ref ref="EmailAppender"/>
+    </logger>
+
+    <!-- Root Logger -->
+    <root level="INFO">
+        <appender-ref ref="ConsoleAppender"/>
+        <appender-ref ref="FileAppender"/>
+        <appender-ref ref="EmailAppender"/>
+    </root>
+</configuration>
