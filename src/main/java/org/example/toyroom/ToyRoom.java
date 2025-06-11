@@ -6,6 +6,8 @@ import javafx.beans.property.SimpleDoubleProperty;
 import org.example.toyroom.models.*;
 import org.example.toyroom.models.toys.Toy;
 import org.example.toyroom.service.ToyService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -15,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ToyRoom {
+    private static final Logger logger = LoggerFactory.getLogger(ToyRoom.class);
 
     private final ToyService toyService;
     private final DoubleProperty budget = new SimpleDoubleProperty();
@@ -60,7 +63,10 @@ public class ToyRoom {
             case "large": return Size.LARGE;
             case "medium": return Size.MEDIUM;
             case "small": return Size.SMALL;
-            default: throw new IllegalArgumentException("Invalid Size: " + sizeStr);
+            default: {
+                logger.error("Invalid size: {}", sizeStr);
+                throw new IllegalArgumentException("Invalid Size: " + sizeStr);
+            }
         }
     }
 }

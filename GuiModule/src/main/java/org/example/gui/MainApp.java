@@ -24,6 +24,6 @@ public class MainApp extends Application {
     }
 
     public static void main(String[] args) {
-        launch(args);
+        Application.launch(args);
     }
 }

@@ -1,6 +1,9 @@
 package org.example.toyroom.models;
 
 import org.example.toyroom.models.toys.*;
+import org.example.toyroom.service.ToyService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,6 +11,8 @@ import java.util.Set;
 import java.util.function.Supplier;
 
 public class ToyFactory {
+    private static final Logger logger = LoggerFactory.getLogger(ToyFactory.class);
+
     private static final Map<String, Supplier<Toy>> toySuppliers = new HashMap<>();
 
     static {
@@ -27,7 +32,10 @@ public class ToyFactory {
             case "Car": return new Car(size, color, material);
             case "Ball": return new Ball(size, color, material);
             case "Duck":  return new Duck(size, color, material);
-            default: throw new IllegalArgumentException("Unknown toy type: " + type);
+            default: {
+                logger.warn("Unknown toy type: {}", type);
+                throw new IllegalArgumentException("Unknown toy type: " + type);
+            }
         }
     }
 
@@ -37,7 +45,10 @@ public class ToyFactory {
             case "Car": return 25.0;
             case "Ball": return 10.0;
             case "Duck": return 5.0;
-            default: return 0;
+            default: {
+                logger.warn("Unknown price type: {}", type);
+                return 0;
+            }
         }
     }
 
@@ -47,7 +58,10 @@ public class ToyFactory {
             case "Car": return "/images/car.png";
             case "Ball": return "/images/ball.png";
             case "Duck": return "/images/duck.png";
-            default: return "";
+            default:{
+                logger.warn("Unknown image type: {}", type);
+                return "";
+            }
         }
     }
 }

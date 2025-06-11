@@ -15,7 +15,7 @@ public class ToyService {
     private final ToyRepository toyRepository;
     private final ToyRoom toyRoom;
 
-    private static final Logger logger = LoggerFactory.getLogger(ToyRepository.class);
+    private static final Logger logger = LoggerFactory.getLogger(ToyService.class);
 
     public ToyService(ToyRoom toyRoom) {
         this(toyRoom, new ToyRepository());
@@ -33,6 +33,7 @@ public class ToyService {
             toyRoom.setBudget(currentBudget - toy.getPrice());
             return true; // success
         } else {
+            logger.warn("Toy budget exceeded toy");
             return false; // not enough budget
         }
     }

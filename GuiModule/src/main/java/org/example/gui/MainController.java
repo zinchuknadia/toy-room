@@ -7,11 +7,15 @@ import javafx.scene.layout.GridPane;
 import org.example.toyroom.ToyRoom;
 import org.example.toyroom.models.toys.Toy;
 import org.example.toyroom.service.ToyService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainController implements ToyRoomAware{
+    private static final Logger logger = LoggerFactory.getLogger(MainController.class);
+
     @FXML private TextField searchField;
     @FXML private MenuButton sortMenuButton;
     @FXML private GridPane toyGrid;
@@ -42,22 +46,29 @@ public class MainController implements ToyRoomAware{
         noneItem.setSelected(true); // default
         noneItem.setOnAction(e -> {
             selectedSorts.clear();
+            sortMenuButton.setText("Sort"); // Reset label
             refreshToyGrid();
         });
         sortMenuButton.getItems().add(noneItem);
 
-
         for (String opt : options) {
-            RadioMenuItem item = new RadioMenuItem(opt);
+            RadioMenuItem item = new RadioMenuItem(capitalize(opt));
             item.setToggleGroup(sortGroup);
             item.setOnAction(e -> {
                 selectedSorts.clear();
-                selectedSorts.add(opt); // only one selected
+                selectedSorts.add(opt);
+                sortMenuButton.setText(capitalize(opt)); // Update label to selected option
                 refreshToyGrid();
             });
             sortMenuButton.getItems().add(item);
         }
     }
+
+    private String capitalize(String text) {
+        if (text == null || text.isEmpty()) return text;
+        return text.substring(0, 1).toUpperCase() + text.substring(1);
+    }
+
 
     private void initSearch() {
         searchField.setOnKeyReleased(e -> refreshToyGrid());

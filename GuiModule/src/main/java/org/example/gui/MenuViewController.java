@@ -10,11 +10,14 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import org.example.toyroom.ToyRoom;
 import org.example.toyroom.models.toys.Toy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.List;
 
 public class MenuViewController {
+    private static final Logger logger = LoggerFactory.getLogger(MenuViewController.class);
 
     private ToyRoom toyRoom;
     @FXML
@@ -104,6 +107,7 @@ public class MenuViewController {
             contentPane.getChildren().setAll(node);
         } catch (IOException e) {
             e.printStackTrace();
+            logger.error("Can't load " + fxmlPath);
         }
     }
 

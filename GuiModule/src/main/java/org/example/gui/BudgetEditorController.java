@@ -4,10 +4,14 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import org.example.toyroom.ToyRoom;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.function.Consumer;
 
 public class BudgetEditorController implements ToyRoomAware{
+    private static final Logger logger = LoggerFactory.getLogger(BudgetEditorController.class);
+
     ToyRoom toyRoom;
 
     @FXML
@@ -62,6 +66,7 @@ public class BudgetEditorController implements ToyRoomAware{
 
         } catch (NumberFormatException e) {
             amountField.setStyle("-fx-border-color: red;");
+            logger.error("Can't modify budget: " + e.getMessage());
         }
     }
 }

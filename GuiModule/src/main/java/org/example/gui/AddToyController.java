@@ -12,8 +12,12 @@ import org.example.toyroom.models.ToyFactory;
 import org.example.toyroom.models.toys.Toy;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.paint.Color;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AddToyController implements ToyRoomAware {
+
+    private static final Logger logger = LoggerFactory.getLogger(AddToyController.class);
 
     private ToyRoom toyRoom;
 
@@ -46,6 +50,7 @@ public class AddToyController implements ToyRoomAware {
 
         if (type == null || sizeStr.isEmpty() || material.isEmpty()) {
             showAlert("Please fill in all fields.");
+            logger.warn("ToyRoom: type: {} size: {} material: {}", type, sizeStr, material);
             return;
         }
 
@@ -67,11 +72,17 @@ public class AddToyController implements ToyRoomAware {
             toy.setPrice(price);
             toy.setImagePath(imagePath);
 
-            toyRoom.getToyService().buyToy(toy);
-            showAlert("Toy added successfully!");
+            boolean success = toyRoom.getToyService().buyToy(toy);
+            if(success){
+                showAlert("Toy added successfully!");
+            }else{
+                showAlert("Not enough money!");
+                logger.warn("Not enough money!");
+            }
             clearFields();
         } catch (NumberFormatException e) {
             showAlert("Error: " + e.getMessage());
+            logger.error(e.getMessage());
         }
     }
 
@@ -86,7 +97,7 @@ public class AddToyController implements ToyRoomAware {
 
     private void clearFields() {
         materialField.clear();
-        colorPicker.setValue(Color.WHITE); // Reset to white or your default
+        colorPicker.setValue(Color.WHITE);
     }
 
     private void showAlert(String message) {

@@ -8,8 +8,13 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import org.example.toyroom.models.MyColor;
 import org.example.toyroom.models.toys.Toy;
+import org.example.toyroom.service.ToyService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ToyCardController {
+    private static final Logger logger = LoggerFactory.getLogger(ToyCardController.class);
+
     @FXML private Label typeLabel;
     @FXML private Label sizeLabel;
     @FXML private Label materialLabel;
@@ -31,6 +36,7 @@ public class ToyCardController {
                 toyImage.setImage(new Image(url.toExternalForm()));
             } else {
                 System.out.println("Image not found at: " + toy.getImagePath());
+                logger.error("Image not found at: " + toy.getImagePath());
             }
         }
 
@@ -41,7 +47,11 @@ public class ToyCardController {
         }
 
         ContextMenu menu = new ContextMenu();
+        menu.getStyleClass().add("toy-context-menu");
+
         MenuItem deleteItem = new MenuItem("Delete");
+        deleteItem.getStyleClass().add("delete-menu-item");
+
         deleteItem.setOnAction(e -> onDelete.run());
         menu.getItems().add(deleteItem);
 

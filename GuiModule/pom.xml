@@ -18,6 +18,13 @@
     </properties>
 
     <dependencies>
+        <!-- TestFX Core -->
+        <dependency>
+            <groupId>org.testfx</groupId>
+            <artifactId>testfx-junit5</artifactId>
+            <version>4.0.16-alpha</version>
+            <scope>test</scope>
+        </dependency>
 
         <dependency>
             <groupId>org.openjfx</groupId>

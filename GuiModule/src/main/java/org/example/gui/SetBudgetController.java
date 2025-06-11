@@ -3,8 +3,11 @@ package org.example.gui;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import org.example.toyroom.ToyRoom;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SetBudgetController {
+    private static final Logger logger = LoggerFactory.getLogger(SetBudgetController.class);
 
     @FXML private TextField budgetField;
 
@@ -23,6 +26,7 @@ public class SetBudgetController {
         } catch (NumberFormatException e) {
             budgetField.setStyle("-fx-border-color: red;");
             budgetField.setPromptText("Invalid number!");
+            logger.error("Can't set budget: " + e.getMessage());
         }
     }
 }

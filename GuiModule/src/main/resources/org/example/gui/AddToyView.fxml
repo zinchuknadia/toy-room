@@ -8,19 +8,18 @@
             stylesheets="@styles.css">
 
     <center>
-        <VBox spacing="10" alignment="CENTER" maxWidth="300">
+        <VBox spacing="10" alignment="CENTER" maxWidth="300" prefWidth="300">
             <padding>
                 <Insets top="40" right="20" bottom="20" left="20"/>
             </padding>
 
             <Label text="Add New Toy" styleClass="form-title"/>
 
-            <ComboBox fx:id="typeComboBox" promptText="Select toy type"/>
-            <ComboBox fx:id="sizeComboBox" promptText="Select size"/>
-                <ColorPicker fx:id="colorPicker"/>
-            <TextField fx:id="materialField" promptText="Material" styleClass="form-field"/>
-            <Label fx:id="priceLabel" text="Price: $" />
-
+            <ComboBox fx:id="typeComboBox" promptText="Select toy type" styleClass="form-control"/>
+            <ComboBox fx:id="sizeComboBox" promptText="Select size" styleClass="form-control"/>
+            <ColorPicker fx:id="colorPicker" styleClass="form-control"/>
+            <TextField fx:id="materialField" promptText="Material" styleClass="form-control"/>
+            <Label fx:id="priceLabel" text="Price: $" styleClass="price-label"/>
             <Button text="Add Toy" onAction="#handleAddToy" styleClass="form-button"/>
         </VBox>
     </center>

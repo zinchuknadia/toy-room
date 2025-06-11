@@ -8,7 +8,7 @@
 }
 
 .menu-button:hover {
-    -fx-background-color: #4B3F8C;
+    -fx-background-color: #388E3C;
     -fx-cursor: hand;
 }
 
@@ -109,4 +109,84 @@
     -fx-border-radius: 12;
     -fx-background-radius: 12;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0.3, 2, 2);
+}
+.form-control {
+    -fx-pref-width: 280px;
+    -fx-min-width: 280px;
+    -fx-max-width: 280px;
+    -fx-pref-height: 36px;
+    -fx-font-size: 14px;
+    -fx-background-radius: 6px;
+    -fx-border-radius: 6px;
+}
+.combo-box {
+    -fx-border-color: #ccc;
+    -fx-background-color: white;
+}
+
+.combo-box:hover {
+    -fx-border-color: #888;
+    -fx-cursor: hand;
+}
+
+.combo-box:focused {
+    -fx-border-color: #4CAF50;
+    -fx-border-width: 2px;
+    -fx-effect: dropshadow(gaussian, rgba(76, 175, 80, 0.3), 5, 0.5, 0, 0);
+}
+
+/* ColorPicker */
+.form-color-picker {
+    -fx-background-color: white;
+    -fx-border-color: #ccc;
+    -fx-padding: 0 0 0 10px;
+}
+
+.form-color-picker:hover {
+    -fx-border-color: #888;
+    -fx-cursor: hand;
+}
+
+.form-color-picker:focused {
+    -fx-border-color: #4CAF50;
+    -fx-border-width: 2px;
+    -fx-effect: dropshadow(gaussian, rgba(76, 175, 80, 0.3), 5, 0.5, 0, 0);
+}
+
+/* Price Label */
+.price-label {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #222;
+    -fx-padding: 15 0 5 0;
+}
+
+.toy-context-menu {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #ddd;
+    -fx-border-width: 1px;
+    -fx-padding: 2px;
+}
+
+/* Style individual menu items */
+.delete-menu-item {
+    -fx-font-size: 13px;
+    -fx-background-color: #606060;
+    -fx-text-fill: #ac2c2c; /* red tone for delete */
+}
+
+.delete-menu-item:hover {
+    -fx-background-color: #505050;
+    -fx-text-fill: #b71c1c;
+}
+.menu-icon-button {
+    -fx-background-color: transparent;
+    -fx-font-size: 22px;
+    -fx-text-fill: #555;
+    -fx-padding: 2px 8px;
+}
+
+.menu-button, .text-field {
+    -fx-pref-height: 36px;
+    -fx-font-size: 14px;
 }
