@@ -1,66 +1,27 @@
 package org.example.toyroom;
 
+import javafx.beans.property.DoubleProperty;
 import org.example.toyroom.models.Size;
-import org.example.toyroom.models.toys.Toy;
-import org.example.toyroom.repository.ToyRepository;
+import org.example.toyroom.service.ToyService;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
 
 public class ToyRoomTest {
 
     @Test
-    public void testGetToyRepository_ReturnsInjectedRepository() {
-        ToyRepository mockRepository = mock(ToyRepository.class);
-        ToyRoom toyRoom = new ToyRoom(mockRepository);
-        assertSame(mockRepository, toyRoom.getToyRepository());
+    public void testConstructor_InitializesToyServiceAndBudget() {
+        ToyRoom toyRoom = new ToyRoom(100.0);
+        assertNotNull(toyRoom.getToyService());
+        assertEquals(100.0, toyRoom.getBudget());
     }
 
     @Test
-    public void testReadToysFromFile() throws IOException {
-        // Створюємо тимчасовий файл
-        Path tempFile = Files.createTempFile("test-toys", ".txt");
-        Files.write(tempFile, List.of("car,medium,#ff0000,plastic", "doll,small,#00ff00,fabric"));
-
+    public void testBudgetProperty_SetAndGet() {
         ToyRoom toyRoom = new ToyRoom();
-        List<Toy> toys = toyRoom.readToysFromFile(tempFile.toString());
-
-        assertEquals(2, toys.size());
-
-        Toy first = toys.get(0);
-        assertEquals("car", first.getType());
-        assertEquals(Size.MEDIUM, first.getSize());
-        assertEquals("#ff0000", first.getColor().getHexCode());
-        assertEquals("plastic", first.getMaterial());
-
-        // Прибираємо тимчасовий файл
-        Files.deleteIfExists(tempFile);
-    }
-
-    @Test
-    public void testImportToysFromFile_CallsRepositorySave() throws IOException {
-        // Arrange
-        Path tempFile = Files.createTempFile("test-toys", ".txt");
-        Files.write(tempFile, List.of("robot,large,#0000ff,metal"));
-
-        ToyRepository mockRepository = Mockito.mock(ToyRepository.class);
-        ToyRoom toyRoom = new ToyRoom(mockRepository);
-
-        // Act
-        toyRoom.importToysFromFile(tempFile.toString());
-
-        // Assert
-        verify(mockRepository, times(1)).saveToys(anyList());
-
-        // Cleanup
-        Files.deleteIfExists(tempFile);
+        toyRoom.setBudget(50.0);
+        assertEquals(50.0, toyRoom.getBudget());
     }
 
     @Test
@@ -76,6 +37,33 @@ public class ToyRoomTest {
             ToyRoom.parseSize("gigantic");
         });
         assertTrue(exception.getMessage().contains("Invalid Size"));
+    }
+    @Test
+    public void testConstructor_WithToyServiceOnly() {
+        ToyService mockService = mock(ToyService.class);
+        ToyRoom toyRoom = new ToyRoom(mockService);
+
+        assertEquals(mockService, toyRoom.getToyService());
+        assertEquals(0.0, toyRoom.getBudget());
+    }
+    @Test
+    public void testConstructor_WithToyServiceAndBudget() {
+        ToyService mockService = mock(ToyService.class);
+        ToyRoom toyRoom = new ToyRoom(mockService, 75.0);
+
+        assertEquals(mockService, toyRoom.getToyService());
+        assertEquals(75.0, toyRoom.getBudget());
+    }
+    @Test
+    public void testBudgetProperty_ObservableProperty() {
+        ToyRoom toyRoom = new ToyRoom();
+        DoubleProperty budgetProperty = toyRoom.budgetProperty();
+
+        assertNotNull(budgetProperty);
+        assertEquals(0.0, budgetProperty.get());
+
+        budgetProperty.set(42.5);
+        assertEquals(42.5, toyRoom.getBudget());
     }
 
 }

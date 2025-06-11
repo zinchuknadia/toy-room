@@ -44,29 +44,29 @@ public class ToyRepository {
         }
     }
 
-    public void saveToys(List<Toy> toys) {
-        logger.info("Adding toys: {}", toys.toString());
-        String query = "INSERT INTO toys (type, size, color_code, material, price, image_path) VALUES (?, ?, ?, ?, ?, ?)";
-
-        try (Connection conn = DatabaseConnector.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
-
-            for (Toy toy : toys) {
-                stmt.setString(1, toy.getType());
-                stmt.setString(2, toy.getSize().toString());
-                stmt.setString(3, toy.getColor().getHexCode()); // або інший getHex()/getName()
-                stmt.setString(4, toy.getMaterial());
-                stmt.setDouble(5, toy.getPrice());
-                stmt.setString(6, toy.getImagePath());
-                stmt.addBatch();
-            }
-
-            stmt.executeBatch();
-            logger.debug("Executed insert statement");
-        } catch (SQLException e) {
-            logger.error("Failed to save toys: " + toys.toString(), e);
-        }
-    }
+//    public void saveToys(List<Toy> toys) {
+//        logger.info("Adding toys: {}", toys.toString());
+//        String query = "INSERT INTO toys (type, size, color_code, material, price, image_path) VALUES (?, ?, ?, ?, ?, ?)";
+//
+//        try (Connection conn = DatabaseConnector.getConnection();
+//             PreparedStatement stmt = conn.prepareStatement(query)) {
+//
+//            for (Toy toy : toys) {
+//                stmt.setString(1, toy.getType());
+//                stmt.setString(2, toy.getSize().toString());
+//                stmt.setString(3, toy.getColor().getHexCode()); // або інший getHex()/getName()
+//                stmt.setString(4, toy.getMaterial());
+//                stmt.setDouble(5, toy.getPrice());
+//                stmt.setString(6, toy.getImagePath());
+//                stmt.addBatch();
+//            }
+//
+//            stmt.executeBatch();
+//            logger.debug("Executed insert statement");
+//        } catch (SQLException e) {
+//            logger.error("Failed to save toys: " + toys.toString(), e);
+//        }
+//    }
 
     public List<Toy> findAll() {
         logger.info("Finding all toys ");
@@ -89,125 +89,125 @@ public class ToyRepository {
         return toys;
     }
 
-    public List<Toy> findAllSortedByColor() {
-        logger.info("Finding toys sorted by color ");
-        List<Toy> toys = new ArrayList<>();
-        String sql = "SELECT * FROM toys ORDER BY color_code";
+//    public List<Toy> findAllSortedByColor() {
+//        logger.info("Finding toys sorted by color ");
+//        List<Toy> toys = new ArrayList<>();
+//        String sql = "SELECT * FROM toys ORDER BY color_code";
+//
+//        try (Connection conn = DatabaseConnector.getConnection();
+//             Statement stmt = conn.createStatement();
+//             ResultSet rs = stmt.executeQuery(sql)) {
+//
+//            while (rs.next()) {
+//                Toy toy = mapRowToToy(rs);
+//                toys.add(toy);
+//            }
+//            logger.debug("Executed select statement");
+//        } catch (SQLException e) {
+//            logger.error("Failed find toys sorted by color: ", e);
+//        }
+//
+//        return toys;
+//    }
 
-        try (Connection conn = DatabaseConnector.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+//    public List<Toy> findAllSortedBySize() {
+//        logger.info("Finding toys sorted by size ");
+//        List<Toy> toys = new ArrayList<>();
+//        String sql = "SELECT * FROM toys ORDER BY \n" +
+//                "  CASE size\n" +
+//                "    WHEN 'SMALL' THEN 1\n" +
+//                "    WHEN 'MEDIUM' THEN 2\n" +
+//                "    WHEN 'LARGE' THEN 3\n" +
+//                "  END;\n";
+//
+//        try (Connection conn = DatabaseConnector.getConnection();
+//             PreparedStatement stmt = conn.prepareStatement(sql);
+//             ResultSet rs = stmt.executeQuery()) {
+//
+//            while (rs.next()) {
+//                Toy toy = mapRowToToy(rs);
+//                toys.add(toy);
+//            }
+//            logger.debug("Executed select statement");
+//        } catch (SQLException e) {
+//            logger.error("Failed to find toys sorted by size: ", e);
+//        }
+//
+//        return toys;
+//    }
 
-            while (rs.next()) {
-                Toy toy = mapRowToToy(rs);
-                toys.add(toy);
-            }
-            logger.debug("Executed select statement");
-        } catch (SQLException e) {
-            logger.error("Failed find toys sorted by color: ", e);
-        }
+//    public List<Toy> findByColor(MyColor color) {
+//        logger.info("Finding toys by color {} ", color);
+//        List<Toy> toys = new ArrayList<>();
+//        String sql = "SELECT * FROM toys WHERE color_code = ?";
+//
+//        try (Connection conn = DatabaseConnector.getConnection();
+//             PreparedStatement stmt = conn.prepareStatement(sql)) {
+//
+//            stmt.setString(1, color.getHexCode()); // assumes Color class has a method getHexCode()
+//            try (ResultSet rs = stmt.executeQuery()) {
+//                while (rs.next()) {
+//                    Toy toy = mapRowToToy(rs);
+//                    toys.add(toy);
+//                }
+//            }
+//            logger.debug("Executed select statement");
+//
+//        } catch (SQLException e) {
+//            logger.error("Failed to find toys by color", e);
+//        }
+//
+//        return toys;
+//    }
 
-        return toys;
-    }
-
-    public List<Toy> findAllSortedBySize() {
-        logger.info("Finding toys sorted by size ");
-        List<Toy> toys = new ArrayList<>();
-        String sql = "SELECT * FROM toys ORDER BY \n" +
-                "  CASE size\n" +
-                "    WHEN 'SMALL' THEN 1\n" +
-                "    WHEN 'MEDIUM' THEN 2\n" +
-                "    WHEN 'LARGE' THEN 3\n" +
-                "  END;\n";
-
-        try (Connection conn = DatabaseConnector.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
-
-            while (rs.next()) {
-                Toy toy = mapRowToToy(rs);
-                toys.add(toy);
-            }
-            logger.debug("Executed select statement");
-        } catch (SQLException e) {
-            logger.error("Failed to find toys sorted by size: ", e);
-        }
-
-        return toys;
-    }
-
-    public List<Toy> findByColor(MyColor color) {
-        logger.info("Finding toys by color {} ", color);
-        List<Toy> toys = new ArrayList<>();
-        String sql = "SELECT * FROM toys WHERE color_code = ?";
-
-        try (Connection conn = DatabaseConnector.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setString(1, color.getHexCode()); // assumes Color class has a method getHexCode()
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    Toy toy = mapRowToToy(rs);
-                    toys.add(toy);
-                }
-            }
-            logger.debug("Executed select statement");
-
-        } catch (SQLException e) {
-            logger.error("Failed to find toys by color", e);
-        }
-
-        return toys;
-    }
-
-    public List<Toy> findByType(String type) {
-        logger.info("Finding toys by type {} ", type);
-        List<Toy> toys = new ArrayList<>();
-        String sql = "SELECT * FROM toys WHERE type = ?";
-
-        try (Connection conn = DatabaseConnector.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setString(1, type);
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    Toy toy = mapRowToToy(rs);
-                    toys.add(toy);
-                }
-            }
-            logger.debug("Executed select statement");
-
-        } catch (SQLException e) {
-            logger.error("Failed to find toys by type", e);
-        }
-
-        return toys;
-    }
+//    public List<Toy> findByType(String type) {
+//        logger.info("Finding toys by type {} ", type);
+//        List<Toy> toys = new ArrayList<>();
+//        String sql = "SELECT * FROM toys WHERE type = ?";
+//
+//        try (Connection conn = DatabaseConnector.getConnection();
+//             PreparedStatement stmt = conn.prepareStatement(sql)) {
+//
+//            stmt.setString(1, type);
+//            try (ResultSet rs = stmt.executeQuery()) {
+//                while (rs.next()) {
+//                    Toy toy = mapRowToToy(rs);
+//                    toys.add(toy);
+//                }
+//            }
+//            logger.debug("Executed select statement");
+//
+//        } catch (SQLException e) {
+//            logger.error("Failed to find toys by type", e);
+//        }
+//
+//        return toys;
+//    }
 
 
-    public List<Toy> findBySize(Size size) {
-        logger.info("Finding toys by size {} ", size);
-        List<Toy> toys = new ArrayList<>();
-        String sql = "SELECT * FROM toys WHERE size = ?";
-
-        try (Connection conn = DatabaseConnector.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setString(1, size.name());
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    Toy toy = mapRowToToy(rs);
-                    toys.add(toy);
-                }
-            }
-            logger.debug("Executed select statement");
-
-        } catch (SQLException e) {
-            logger.error("Failed to find toys by size", e);
-        }
-
-        return toys;
-    }
+//    public List<Toy> findBySize(Size size) {
+//        logger.info("Finding toys by size {} ", size);
+//        List<Toy> toys = new ArrayList<>();
+//        String sql = "SELECT * FROM toys WHERE size = ?";
+//
+//        try (Connection conn = DatabaseConnector.getConnection();
+//             PreparedStatement stmt = conn.prepareStatement(sql)) {
+//
+//            stmt.setString(1, size.name());
+//            try (ResultSet rs = stmt.executeQuery()) {
+//                while (rs.next()) {
+//                    Toy toy = mapRowToToy(rs);
+//                    toys.add(toy);
+//                }
+//            }
+//            logger.debug("Executed select statement");
+//
+//        } catch (SQLException e) {
+//            logger.error("Failed to find toys by size", e);
+//        }
+//
+//        return toys;
+//    }
 
     public boolean deleteById(int id) {
         logger.info("Deleting toy with id {} ", id);

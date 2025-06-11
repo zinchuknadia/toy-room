@@ -119,7 +119,7 @@ public class Toy {
     public String toString() {
         return "\n" +
                 "type=" + type.get() +
-                ", size=" + size.get() +
+                ", size=" + size.get().name() +
                 ", color=" + color.get() +
                 ", material=" + material.get() +
                 ", price=" + price.get() +
