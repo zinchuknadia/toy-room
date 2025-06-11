@@ -8,7 +8,7 @@ class ToyTest {
 
     @Test
     void testConstructorSetsAllFields() {
-        Color color = new Color("FF0000");
+        MyColor color = new MyColor("FF0000");
         Size size = Size.MEDIUM;
         Toy toy = new Toy("Bear", size, color, "Cotton");
 
@@ -24,7 +24,7 @@ class ToyTest {
 
         toy.setType("Car");
         toy.setSize(Size.SMALL);
-        toy.setColor(new Color("#00FF00"));
+        toy.setColor(new MyColor("#00FF00"));
         toy.setMaterial("Plastic");
 
         assertEquals("Car", toy.getType());
@@ -51,7 +51,7 @@ class ToyTest {
 
     @Test
     void testToStringContainsKeyFields() {
-        Toy toy = new Toy("Doll", Size.LARGE, new Color("123456"), "Wool");
+        Toy toy = new Toy("Doll", Size.LARGE, new MyColor("123456"), "Wool");
         String str = toy.toString();
 
         assertTrue(str.contains("Doll"));

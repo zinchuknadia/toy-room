@@ -1,9 +1,9 @@
 package org.example.toyroom.models;
 
-public class Color {
+public class MyColor {
     private final String hexCode;
 
-    public Color(String hexCode) {
+    public MyColor(String hexCode) {
         this.hexCode = hexCode.startsWith("#") ? hexCode : "#" + hexCode;
     }
 

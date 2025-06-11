@@ -1,7 +1,7 @@
 package org.example.toyroom.models.toys;
 
 import javafx.beans.property.*;
-import org.example.toyroom.models.Color;
+import org.example.toyroom.models.MyColor;
 import org.example.toyroom.models.Size;
 
 public class Toy {
@@ -9,20 +9,20 @@ public class Toy {
 
     private final StringProperty type = new SimpleStringProperty();
     private final ObjectProperty<Size> size = new SimpleObjectProperty<>();
-    private final ObjectProperty<Color> color = new SimpleObjectProperty<>();
+    private final ObjectProperty<MyColor> color = new SimpleObjectProperty<>();
     private final StringProperty material = new SimpleStringProperty();
     private final DoubleProperty price = new SimpleDoubleProperty();
 
     public Toy(){}
 
-    public Toy(String type, Size size, Color color, String material) {
+    public Toy(String type, Size size, MyColor color, String material) {
         this.type.set(type);
         this.size.set(size);
         this.color.set(color);
         this.material.set(material);
     }
 
-    public Toy(String type, Size size, Color color, String material, Double price) {
+    public Toy(String type, Size size, MyColor color, String material, Double price) {
         this.type.set(type);
         this.size.set(size);
         this.color.set(color);
@@ -66,15 +66,15 @@ public class Toy {
     }
 
     // ======= Color =======
-    public Color getColor() {
+    public MyColor getColor() {
         return color.get();
     }
 
-    public void setColor(Color color) {
+    public void setColor(MyColor color) {
         this.color.set(color);
     }
 
-    public ObjectProperty<Color> colorProperty() {
+    public ObjectProperty<MyColor> colorProperty() {
         return color;
     }
 

@@ -18,7 +18,11 @@
 
             <ComboBox fx:id="typeComboBox" promptText="Select toy type"/>
             <ComboBox fx:id="sizeComboBox" promptText="Select size"/>
-            <TextField fx:id="colorField" promptText="Color" styleClass="form-field"/>
+<!--            <TextField fx:id="colorField" promptText="Color" styleClass="form-field"/>-->
+<!--            <HBox spacing="10">-->
+<!--                <Label text="Color:"/>-->
+                <ColorPicker fx:id="colorPicker"/>
+<!--            </HBox>-->
             <TextField fx:id="materialField" promptText="Material" styleClass="form-field"/>
             <Label fx:id="priceLabel" text="Price: $" />
 

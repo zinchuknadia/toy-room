@@ -8,9 +8,9 @@ public class SetBudgetController {
 
     @FXML private TextField budgetField;
 
-    private MainViewController mainController;
+    private MenuViewController mainController;
 
-    public void setMainController(MainViewController mainController) {
+    public void setMainController(MenuViewController mainController) {
         this.mainController = mainController;
     }
 

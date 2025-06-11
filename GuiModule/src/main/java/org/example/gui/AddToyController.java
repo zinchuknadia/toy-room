@@ -6,10 +6,12 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import org.example.toyroom.ToyRoom;
-import org.example.toyroom.models.Color;
+import org.example.toyroom.models.MyColor;
 import org.example.toyroom.models.Size;
 import org.example.toyroom.models.ToyFactory;
 import org.example.toyroom.models.toys.Toy;
+import javafx.scene.control.ColorPicker;
+import javafx.scene.paint.Color;
 
 public class AddToyController implements ToyRoomAware {
 
@@ -18,6 +20,7 @@ public class AddToyController implements ToyRoomAware {
     @FXML private ComboBox<String> typeComboBox;
     @FXML private ComboBox<Size> sizeComboBox;
     @FXML private TextField colorField;
+    @FXML private ColorPicker colorPicker;
     @FXML private TextField materialField;
     @FXML private Label priceLabel;
 
@@ -40,20 +43,28 @@ public class AddToyController implements ToyRoomAware {
     public void handleAddToy() {
         String type = typeComboBox.getValue();
         String sizeStr = sizeComboBox.getValue().toString();
-        String colorStr = colorField.getText();
+//        String colorStr = colorField.getText();
         String material = materialField.getText();
 
-        if (type == null || sizeStr.isEmpty() || colorStr.isEmpty() || material.isEmpty()) {
+        if (type == null || sizeStr.isEmpty() || material.isEmpty()) {
             showAlert("Please fill in all fields.");
             return;
         }
 
         try {
             Size size = parseSize(sizeStr);
-            Color color = new Color(colorStr.toLowerCase());
             double price = ToyFactory.getPrice(type);
 
-            Toy toy = ToyFactory.createToy(type, size, color, material);
+            Color fxColor = colorPicker.getValue();
+            String hexColor = String.format("#%02x%02x%02x",
+                    (int)(fxColor.getRed() * 255),
+                    (int)(fxColor.getGreen() * 255),
+                    (int)(fxColor.getBlue() * 255)
+            );
+
+            MyColor myColor = new MyColor(hexColor);
+
+            Toy toy = ToyFactory.createToy(type, size, myColor, material);
             toy.setPrice(price);
 
             toyRoom.getToyService().buyToy(toy);
@@ -74,8 +85,11 @@ public class AddToyController implements ToyRoomAware {
     }
 
     private void clearFields() {
-        colorField.clear();
+//        typeComboBox.getSelectionModel().clearSelection();
+//        sizeComboBox.getSelectionModel().clearSelection();
+//        colorField.clear();
         materialField.clear();
+        colorPicker.setValue(Color.WHITE); // Reset to white or your default
     }
 
     private void showAlert(String message) {

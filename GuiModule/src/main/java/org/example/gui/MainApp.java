@@ -4,7 +4,6 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.example.toyroom.ToyRoom;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +15,7 @@ public class MainApp extends Application {
         logger.error("MainApp test logger");
 
         // Proceed with main view
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/gui/MainView.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/gui/MenuView.fxml"));
         Scene scene = new Scene(loader.load(),900,500);
 
         primaryStage.setTitle("Toy Room");

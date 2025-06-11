@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.example.DatabaseConnector;
-import org.example.toyroom.models.Color;
+import org.example.toyroom.models.MyColor;
 import org.example.toyroom.models.Size;
 import org.example.toyroom.models.toys.Toy;
 
@@ -134,7 +134,7 @@ public class ToyRepository {
         return toys;
     }
 
-    public List<Toy> findByColor(Color color) {
+    public List<Toy> findByColor(MyColor color) {
         logger.info("Finding toys by color {} ", color);
         List<Toy> toys = new ArrayList<>();
         String sql = "SELECT * FROM toys WHERE color_code = ?";
@@ -230,7 +230,7 @@ public class ToyRepository {
         Toy toy = new Toy();
         toy.setId(rs.getInt("id"));
         toy.setType(rs.getString("type"));
-        toy.setColor(new Color(rs.getString("color_code")));
+        toy.setColor(new MyColor(rs.getString("color_code")));
         toy.setSize(Size.valueOf(rs.getString("size")));
         toy.setMaterial(rs.getString("material"));
         toy.setPrice(rs.getDouble("price"));

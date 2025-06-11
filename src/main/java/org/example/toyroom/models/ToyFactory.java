@@ -21,7 +21,7 @@ public class ToyFactory {
         return toySuppliers.keySet();
     }
 
-    public static Toy createToy(String type, Size size, Color color, String material) {
+    public static Toy createToy(String type, Size size, MyColor color, String material) {
         switch (type) {
             case "Doll": return new Doll(size, color, material);
             case "Car": return new Car(size, color, material);

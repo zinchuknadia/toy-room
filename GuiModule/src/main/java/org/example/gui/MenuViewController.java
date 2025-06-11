@@ -14,7 +14,7 @@ import org.example.toyroom.models.toys.Toy;
 import java.io.IOException;
 import java.util.List;
 
-public class MainViewController {
+public class MenuViewController {
 
     private ToyRoom toyRoom;
     @FXML

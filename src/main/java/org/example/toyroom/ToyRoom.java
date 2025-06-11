@@ -69,7 +69,7 @@ public class ToyRoom {
                 String type = details[0];
                 Size size = parseSize(details[1]);
                 String hex = details[2].toLowerCase();
-                Color color = new Color(hex);
+                MyColor color = new MyColor(hex);
                 String material = details[3];
                 Double price = Double.parseDouble(details[4]);
                 toys.add(new Toy(type, size, color, material, price));

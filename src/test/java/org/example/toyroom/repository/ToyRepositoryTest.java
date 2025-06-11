@@ -1,6 +1,6 @@
 package org.example.toyroom.repository;
 
-import org.example.toyroom.models.Color;
+import org.example.toyroom.models.MyColor;
 import org.example.toyroom.models.Size;
 import org.example.toyroom.models.toys.Toy;
 import org.junit.jupiter.api.*;
@@ -57,7 +57,7 @@ public class ToyRepositoryTest {
 
     @Test
     void testAddAndFindAll() {
-        Toy toy = new Toy("Car", Size.MEDIUM, new Color("#FF0000"), "Plastic");
+        Toy toy = new Toy("Car", Size.MEDIUM, new MyColor("#FF0000"), "Plastic");
         toyRepository.add(toy);
 
         List<Toy> allToys = toyRepository.findAll();
@@ -73,9 +73,9 @@ public class ToyRepositoryTest {
 
     @Test
     void testFindAllSortedByColor() {
-        toyRepository.add(new Toy("Ball", Size.SMALL, new Color("#00FF00"), "Rubber"));
-        toyRepository.add(new Toy("Doll", Size.LARGE, new Color("#0000FF"), "Fabric"));
-        toyRepository.add(new Toy("Car", Size.MEDIUM, new Color("#FF0000"), "Plastic"));
+        toyRepository.add(new Toy("Ball", Size.SMALL, new MyColor("#00FF00"), "Rubber"));
+        toyRepository.add(new Toy("Doll", Size.LARGE, new MyColor("#0000FF"), "Fabric"));
+        toyRepository.add(new Toy("Car", Size.MEDIUM, new MyColor("#FF0000"), "Plastic"));
 
         List<Toy> toys = toyRepository.findAllSortedByColor();
 
@@ -88,9 +88,9 @@ public class ToyRepositoryTest {
 
     @Test
     void testFindAllSortedBySize() {
-        toyRepository.add(new Toy("Ball", Size.SMALL, new Color("#00FF00"), "Rubber"));
-        toyRepository.add(new Toy("Doll", Size.LARGE, new Color("#0000FF"), "Fabric"));
-        toyRepository.add(new Toy("Car", Size.MEDIUM, new Color("#FF0000"), "Plastic"));
+        toyRepository.add(new Toy("Ball", Size.SMALL, new MyColor("#00FF00"), "Rubber"));
+        toyRepository.add(new Toy("Doll", Size.LARGE, new MyColor("#0000FF"), "Fabric"));
+        toyRepository.add(new Toy("Car", Size.MEDIUM, new MyColor("#FF0000"), "Plastic"));
 
         List<Toy> toys = toyRepository.findAllSortedBySize();
 
@@ -105,8 +105,8 @@ public class ToyRepositoryTest {
     public void testSaveToys_shouldInsertAllToys() throws SQLException {
         // Arrange
         List<Toy> toys = new ArrayList<>();
-        toys.add(new Toy("Car", Size.MEDIUM, new Color("#FF0000"), "Plastic"));
-        toys.add(new Toy("Doll", Size.SMALL, new Color("#00FF00"), "Fabric"));
+        toys.add(new Toy("Car", Size.MEDIUM, new MyColor("#FF0000"), "Plastic"));
+        toys.add(new Toy("Doll", Size.SMALL, new MyColor("#00FF00"), "Fabric"));
 
         // Act
         toyRepository.saveToys(toys);
@@ -123,7 +123,7 @@ public class ToyRepositoryTest {
                 String color = rs.getString("color_code");
                 String material = rs.getString("material");
 
-                savedToys.add(new Toy(type, Size.valueOf(size), new Color(color), material));
+                savedToys.add(new Toy(type, Size.valueOf(size), new MyColor(color), material));
             }
         }
 
@@ -138,7 +138,7 @@ public class ToyRepositoryTest {
 
     @Test
     void testDeleteById() {
-        Toy toy = new Toy("Train", Size.LARGE, new Color("#123456"), "Wood");
+        Toy toy = new Toy("Train", Size.LARGE, new MyColor("#123456"), "Wood");
         toyRepository.add(toy);
 
         List<Toy> toysBefore = toyRepository.findAll();
@@ -156,15 +156,15 @@ public class ToyRepositoryTest {
 
     @Test
     void testFindByColor() {
-        Toy toy1 = new Toy("Car", Size.MEDIUM, new Color("#AAAAAA"), "Plastic");
-        Toy toy2 = new Toy("Ball", Size.SMALL, new Color("#BBBBBB"), "Rubber");
-        Toy toy3 = new Toy("Doll", Size.LARGE, new Color("#AAAAAA"), "Fabric");
+        Toy toy1 = new Toy("Car", Size.MEDIUM, new MyColor("#AAAAAA"), "Plastic");
+        Toy toy2 = new Toy("Ball", Size.SMALL, new MyColor("#BBBBBB"), "Rubber");
+        Toy toy3 = new Toy("Doll", Size.LARGE, new MyColor("#AAAAAA"), "Fabric");
 
         toyRepository.add(toy1);
         toyRepository.add(toy2);
         toyRepository.add(toy3);
 
-        List<Toy> grayToys = toyRepository.findByColor(new Color("#AAAAAA"));
+        List<Toy> grayToys = toyRepository.findByColor(new MyColor("#AAAAAA"));
 
         assertEquals(2, grayToys.size());
         for (Toy t : grayToys) {
@@ -174,9 +174,9 @@ public class ToyRepositoryTest {
 
     @Test
     void testFindByType() {
-        Toy toy1 = new Toy("Car", Size.MEDIUM, new Color("#AAAAAA"), "Plastic");
-        Toy toy2 = new Toy("Ball", Size.SMALL, new Color("#BBBBBB"), "Rubber");
-        Toy toy3 = new Toy("Car", Size.LARGE, new Color("#CCCCCC"), "Metal");
+        Toy toy1 = new Toy("Car", Size.MEDIUM, new MyColor("#AAAAAA"), "Plastic");
+        Toy toy2 = new Toy("Ball", Size.SMALL, new MyColor("#BBBBBB"), "Rubber");
+        Toy toy3 = new Toy("Car", Size.LARGE, new MyColor("#CCCCCC"), "Metal");
 
         toyRepository.add(toy1);
         toyRepository.add(toy2);
@@ -192,9 +192,9 @@ public class ToyRepositoryTest {
 
     @Test
     void testFindBySize() {
-        Toy toy1 = new Toy("Car", Size.MEDIUM, new Color("#AAAAAA"), "Plastic");
-        Toy toy2 = new Toy("Ball", Size.SMALL, new Color("#BBBBBB"), "Rubber");
-        Toy toy3 = new Toy("Doll", Size.MEDIUM, new Color("#CCCCCC"), "Fabric");
+        Toy toy1 = new Toy("Car", Size.MEDIUM, new MyColor("#AAAAAA"), "Plastic");
+        Toy toy2 = new Toy("Ball", Size.SMALL, new MyColor("#BBBBBB"), "Rubber");
+        Toy toy3 = new Toy("Doll", Size.MEDIUM, new MyColor("#CCCCCC"), "Fabric");
 
         toyRepository.add(toy1);
         toyRepository.add(toy2);

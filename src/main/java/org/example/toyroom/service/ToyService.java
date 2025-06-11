@@ -1,7 +1,7 @@
 package org.example.toyroom.service;
 
 import org.example.toyroom.ToyRoom;
-import org.example.toyroom.models.Color;
+import org.example.toyroom.models.MyColor;
 import org.example.toyroom.models.Size;
 import org.example.toyroom.models.toys.Toy;
 import org.example.toyroom.repository.ToyRepository;
@@ -49,7 +49,7 @@ public class ToyService {
         return toyRepository.findAllSortedBySize();
     }
 
-    public List<Toy> findByColor(Color color) {
+    public List<Toy> findByColor(MyColor color) {
         return toyRepository.findByColor(color);
     }
 

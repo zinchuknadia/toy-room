@@ -5,7 +5,7 @@
 
 <BorderPane fx:id="mainPane" xmlns:fx="http://javafx.com/fxml/1"
             xmlns="http://javafx.com/javafx/21.0.7"
-            fx:controller="org.example.gui.MainViewController"
+            fx:controller="org.example.gui.MenuViewController"
             stylesheets="@styles.css">
 
     <left>
