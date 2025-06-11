@@ -21,17 +21,10 @@ public class MenuViewController {
     private Label budgetLabel;
 
     @FXML private StackPane contentPane;
-//    @FXML private TableColumn<Toy, String> typeCol;
-//    @FXML private TableColumn<Toy, String> sizeCol;
-//    @FXML private TableColumn<Toy, String> colorCol;
-//    @FXML private TableColumn<Toy, String> materialCol;
 
     @FXML private Button addToyButton;
-    @FXML private Button readFileButton;
-    @FXML private Button findToyButton;
-    @FXML private Button sortToysButton;
-    @FXML private Button deleteToyButton;
     @FXML private Button editBudgetButton;
+    @FXML private Button mainButton;
 
 
     private final ObservableList<Toy> toys = FXCollections.observableArrayList();
@@ -46,8 +39,8 @@ public class MenuViewController {
         updateBudgetLabel();
 
         // Load default view
-        loadContent("AddToyView.fxml");
-        highlightButton(addToyButton);
+        loadContent("MainView.fxml");
+        highlightButton(mainButton);
 
         toyRoom.budgetProperty().addListener((obs, oldVal, newVal) -> updateBudgetLabel());
     }
@@ -65,43 +58,25 @@ public class MenuViewController {
     }
 
     private void setMenuEnabled(boolean enabled) {
-        for (Button button : List.of(addToyButton, readFileButton, findToyButton, sortToysButton, deleteToyButton, editBudgetButton)) {
+        for (Button button : List.of(mainButton, addToyButton, editBudgetButton)) {
             button.setDisable(!enabled);
         }
     }
 
     private void refreshTable() {
-        toys.setAll(toyRoom.getToyService().findAll());
+        toys.setAll(toyRoom.getToyService().getAllToys());
+    }
+
+    @FXML
+    public void onMainButtonClicked() {
+        loadContent("MainView.fxml");
+        highlightButton(mainButton);
     }
 
     @FXML
     public void onAddToy() {
         loadContent("AddToyView.fxml");
         highlightButton(addToyButton);
-    }
-
-    @FXML
-    public void onReadFile() {
-        loadContent("ReadFileView.fxml");
-        highlightButton(readFileButton);
-    }
-
-    @FXML
-    public void onFindToy() {
-        loadContent("FindView.fxml");
-        highlightButton(findToyButton);
-    }
-
-    @FXML
-    public void onSortToys() {
-        loadContent("SortView.fxml");
-        highlightButton(sortToysButton);
-    }
-
-    @FXML
-    public void onDeleteToy() {
-        loadContent("DeleteView.fxml");
-        highlightButton(deleteToyButton);
     }
 
     @FXML
@@ -116,7 +91,6 @@ public class MenuViewController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
             Node node = loader.load();
 
-            // передаємо ToyRoom у підлеглий контролер, якщо треба
             Object controller = loader.getController();
 
             if (controller instanceof ToyRoomAware) {
@@ -127,19 +101,6 @@ public class MenuViewController {
                 ((SetBudgetController) controller).setMainController(this);
             }
 
-//            if (controller instanceof BudgetEditorController) {
-//                BudgetEditorController budgetEditorController = (BudgetEditorController) controller;
-//
-//                // Set current budget value
-//                budgetEditorController.setInitialBudget(toyRoom.getBudget());
-//
-//                // Set callback to update ToyRoom and label
-//                budgetEditorController.setOnBudgetChanged(newBudget -> {
-//                    toyRoom.setBudget(newBudget);
-//                    updateBudgetLabel();
-//                });
-//            }
-
             contentPane.getChildren().setAll(node);
         } catch (IOException e) {
             e.printStackTrace();
@@ -148,7 +109,7 @@ public class MenuViewController {
 
     private void highlightButton(Button selectedButton) {
         // Remove "selected" from all buttons
-        for (Button button : List.of(addToyButton, readFileButton, findToyButton, sortToysButton, deleteToyButton, editBudgetButton)) {
+        for (Button button : List.of(mainButton, addToyButton, editBudgetButton)) {
             button.getStyleClass().remove("selected");
         }
         // Add "selected" to the active button

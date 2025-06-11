@@ -1,0 +1,22 @@
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.GridPane?>
+
+<BorderPane fx:id="root" xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.gui.MainController">
+    <top>
+        <HBox spacing="10" alignment="CENTER_LEFT" style="-fx-padding: 10;">
+            <TextField fx:id="searchField" promptText="Search..."/>
+            <MenuButton fx:id="sortMenuButton" text="Sort">
+                <!-- CheckMenuItems додаються у контролері -->
+            </MenuButton>
+        </HBox>
+    </top>
+    <center>
+        <ScrollPane fx:id="scrollPane" fitToWidth="true">
+            <GridPane fx:id="toyGrid" hgap="10" vgap="10" style="-fx-padding: 10;"/>
+        </ScrollPane>
+    </center>
+</BorderPane>

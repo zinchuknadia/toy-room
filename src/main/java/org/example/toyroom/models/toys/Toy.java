@@ -7,27 +7,38 @@ import org.example.toyroom.models.Size;
 public class Toy {
     private int id;
 
+    private String imagePath;
     private final StringProperty type = new SimpleStringProperty();
     private final ObjectProperty<Size> size = new SimpleObjectProperty<>();
     private final ObjectProperty<MyColor> color = new SimpleObjectProperty<>();
     private final StringProperty material = new SimpleStringProperty();
     private final DoubleProperty price = new SimpleDoubleProperty();
 
-    public Toy(){}
+    public Toy() {}
 
-    public Toy(String type, Size size, MyColor color, String material) {
+    public Toy(String type, Size size, MyColor color, String material, String imagePath) {
         this.type.set(type);
         this.size.set(size);
         this.color.set(color);
         this.material.set(material);
+        this.imagePath = imagePath;
     }
 
-    public Toy(String type, Size size, MyColor color, String material, Double price) {
+    public Toy(String type, Size size, MyColor color, String material, Double price, String imagePath) {
         this.type.set(type);
         this.size.set(size);
         this.color.set(color);
         this.material.set(material);
         this.price.set(price);
+        this.imagePath = imagePath;
+    }
+
+    public String getImagePath(){
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath){
+        this.imagePath = imagePath;
     }
 
     // ======= ID — тільки для БД =======
@@ -111,6 +122,7 @@ public class Toy {
                 ", size=" + size.get() +
                 ", color=" + color.get() +
                 ", material=" + material.get() +
-                ", price=" + price.get();
+                ", price=" + price.get() +
+                ", imagePath=" + imagePath;
     }
 }

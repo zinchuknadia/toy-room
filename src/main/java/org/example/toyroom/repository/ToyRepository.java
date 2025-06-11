@@ -19,7 +19,7 @@ public class ToyRepository {
 
     public void add(Toy toy) {
         logger.info("Adding toy: {}", toy);
-        String sql = "INSERT INTO toys (type, size, color_code, material, price) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO toys (type, size, color_code, material, price, image_path) VALUES (?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DatabaseConnector.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -29,6 +29,7 @@ public class ToyRepository {
             stmt.setString(3, toy.getColor().getHexCode());
             stmt.setString(4, toy.getMaterial());
             stmt.setDouble(5, toy.getPrice());
+            stmt.setString(6, toy.getImagePath());
             stmt.executeUpdate();
 
             try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
@@ -45,7 +46,7 @@ public class ToyRepository {
 
     public void saveToys(List<Toy> toys) {
         logger.info("Adding toys: {}", toys.toString());
-        String query = "INSERT INTO toys (type, size, color_code, material, price) VALUES (?, ?, ?, ?, ?)";
+        String query = "INSERT INTO toys (type, size, color_code, material, price, image_path) VALUES (?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DatabaseConnector.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -56,6 +57,7 @@ public class ToyRepository {
                 stmt.setString(3, toy.getColor().getHexCode()); // або інший getHex()/getName()
                 stmt.setString(4, toy.getMaterial());
                 stmt.setDouble(5, toy.getPrice());
+                stmt.setString(6, toy.getImagePath());
                 stmt.addBatch();
             }
 
@@ -234,6 +236,7 @@ public class ToyRepository {
         toy.setSize(Size.valueOf(rs.getString("size")));
         toy.setMaterial(rs.getString("material"));
         toy.setPrice(rs.getDouble("price"));
+        toy.setImagePath(rs.getString("image_path"));
         return toy;
     }
 }

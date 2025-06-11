@@ -16,7 +16,6 @@ import java.util.List;
 
 public class ToyRoom {
 
-//    private String filePath = "D:\\java_projects\\ToyRoom\\playRoomData.txt";
     private final ToyService toyService;
     private final DoubleProperty budget = new SimpleDoubleProperty();
 
@@ -35,6 +34,11 @@ public class ToyRoom {
         this.budget.set(initialBudget);
     }
 
+    public ToyRoom(ToyService toyService) {
+        this.toyService = toyService;
+        this.budget.set(0.0);
+    }
+
     public ToyService getToyService() {
         return toyService;
     }
@@ -49,35 +53,6 @@ public class ToyRoom {
 
     public void setBudget(double value) {
         budget.set(value);
-    }
-
-    public void decreaseBudget(double amount) {
-        budget.set(budget.get() - amount);
-    }
-
-    public void importToysFromFile(String pathToFile) {
-        List<Toy> toys = readToysFromFile(pathToFile);
-        toyService.saveToys(toys);
-    }
-
-    public List<Toy> readToysFromFile(String filePath){
-        List<Toy> toys = new ArrayList<>();
-        try {
-            List<String> lines = Files.readAllLines(Paths.get(filePath));
-            for (String line : lines) {
-                String[] details = line.split(",");
-                String type = details[0];
-                Size size = parseSize(details[1]);
-                String hex = details[2].toLowerCase();
-                MyColor color = new MyColor(hex);
-                String material = details[3];
-                Double price = Double.parseDouble(details[4]);
-                toys.add(new Toy(type, size, color, material, price));
-            }
-        }catch (IOException e){
-            e.printStackTrace();
-        }
-        return toys;
     }
 
     public static Size parseSize(String sizeStr){

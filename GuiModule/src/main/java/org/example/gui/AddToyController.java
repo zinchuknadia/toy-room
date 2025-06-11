@@ -19,7 +19,6 @@ public class AddToyController implements ToyRoomAware {
 
     @FXML private ComboBox<String> typeComboBox;
     @FXML private ComboBox<Size> sizeComboBox;
-    @FXML private TextField colorField;
     @FXML private ColorPicker colorPicker;
     @FXML private TextField materialField;
     @FXML private Label priceLabel;
@@ -43,7 +42,6 @@ public class AddToyController implements ToyRoomAware {
     public void handleAddToy() {
         String type = typeComboBox.getValue();
         String sizeStr = sizeComboBox.getValue().toString();
-//        String colorStr = colorField.getText();
         String material = materialField.getText();
 
         if (type == null || sizeStr.isEmpty() || material.isEmpty()) {
@@ -54,6 +52,7 @@ public class AddToyController implements ToyRoomAware {
         try {
             Size size = parseSize(sizeStr);
             double price = ToyFactory.getPrice(type);
+            String imagePath = ToyFactory.getImagePath(type);
 
             Color fxColor = colorPicker.getValue();
             String hexColor = String.format("#%02x%02x%02x",
@@ -66,6 +65,7 @@ public class AddToyController implements ToyRoomAware {
 
             Toy toy = ToyFactory.createToy(type, size, myColor, material);
             toy.setPrice(price);
+            toy.setImagePath(imagePath);
 
             toyRoom.getToyService().buyToy(toy);
             showAlert("Toy added successfully!");
@@ -85,9 +85,6 @@ public class AddToyController implements ToyRoomAware {
     }
 
     private void clearFields() {
-//        typeComboBox.getSelectionModel().clearSelection();
-//        sizeComboBox.getSelectionModel().clearSelection();
-//        colorField.clear();
         materialField.clear();
         colorPicker.setValue(Color.WHITE); // Reset to white or your default
     }

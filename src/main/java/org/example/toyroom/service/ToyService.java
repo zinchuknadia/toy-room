@@ -1,25 +1,29 @@
 package org.example.toyroom.service;
 
 import org.example.toyroom.ToyRoom;
-import org.example.toyroom.models.MyColor;
-import org.example.toyroom.models.Size;
 import org.example.toyroom.models.toys.Toy;
 import org.example.toyroom.repository.ToyRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ToyService {
 
-    private final ToyRepository toyRepository = new ToyRepository();
+    private final ToyRepository toyRepository;
     private final ToyRoom toyRoom;
 
     private static final Logger logger = LoggerFactory.getLogger(ToyRepository.class);
 
     public ToyService(ToyRoom toyRoom) {
-//        this.toyRepository = toyRepository;
+        this(toyRoom, new ToyRepository());
+    }
+
+    public ToyService(ToyRoom toyRoom, ToyRepository toyRepository) {
         this.toyRoom = toyRoom;
+        this.toyRepository = toyRepository;
     }
 
     public boolean buyToy(Toy toy) {
@@ -33,35 +37,43 @@ public class ToyService {
         }
     }
 
-    public void saveToys(List<Toy> toys) {
-        toyRepository.saveToys(toys);
-    }
-
-    public List<Toy> findAll() {
+    public List<Toy> getAllToys() {
         return toyRepository.findAll();
     }
 
-    public List<Toy> findAllSortedByColor() {
-        return toyRepository.findAllSortedByColor();
-    }
-
-    public List<Toy> findAllSortedBySize() {
-        return toyRepository.findAllSortedBySize();
-    }
-
-    public List<Toy> findByColor(MyColor color) {
-        return toyRepository.findByColor(color);
-    }
-
-    public List<Toy> findByType(String type) {
-        return toyRepository.findByType(type);
-    }
-
-    public List<Toy> findBySize(Size size) {
-        return toyRepository.findBySize(size);
-    }
-
-    public boolean deleteById(int id) {
+    public boolean deleteToy(int id) {
         return toyRepository.deleteById(id);
+    }
+
+    public List<Toy> searchAndSortToys(String keyword, List<String> sortCriteria) {
+        List<Toy> toys = toyRepository.findAll();
+
+        // Filter
+        if (keyword != null && !keyword.isBlank()) {
+            String lowerKeyword = keyword.toLowerCase();
+            toys = toys.stream()
+                    .filter(toy -> toy.getSize().toString().toLowerCase().contains(lowerKeyword)
+                            || toy.getType().toLowerCase().contains(lowerKeyword)
+                            || toy.getMaterial().toLowerCase().contains(lowerKeyword))
+                    .collect(Collectors.toList());
+        }
+
+        // Sort
+        if (!sortCriteria.isEmpty()) {
+            String crit = sortCriteria.get(0); // assuming only one selected
+            Comparator<Toy> comparator = switch (crit) {
+                case "type" -> Comparator.comparing(Toy::getType);
+                case "size" -> Comparator.comparing(Toy::getSize);
+                case "material" -> Comparator.comparing(Toy::getMaterial);
+                case "price" -> Comparator.comparingDouble(Toy::getPrice).reversed();
+                default -> null;
+            };
+
+            if (comparator != null) {
+                toys = toys.stream().sorted(comparator).collect(Collectors.toList());
+            }
+        }
+
+        return toys;
     }
 }

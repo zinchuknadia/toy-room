@@ -10,11 +10,8 @@
 
     <left>
         <VBox styleClass="menu-button" spacing="10" style="-fx-background-color: #2c2f3a; -fx-padding: 40;">
+            <Button fx:id="mainButton" text="Main" onAction="#onMainButtonClicked" styleClass="menu-btn" />
             <Button fx:id="addToyButton" text="Add Toy" onAction="#onAddToy" styleClass="menu-btn" />
-            <Button fx:id="readFileButton" text="Read File" onAction="#onReadFile" styleClass="menu-btn" />
-            <Button fx:id="findToyButton" text="Find Toy" onAction="#onFindToy" styleClass="menu-btn" />
-            <Button fx:id="sortToysButton" text="Sort Toys" onAction="#onSortToys" styleClass="menu-btn" />
-            <Button fx:id="deleteToyButton" text="Delete Toy" onAction="#onDeleteToy" styleClass="menu-btn" />
             <Button fx:id="editBudgetButton" text="Edit Budget" onAction="#handleEditBudget" styleClass="menu-btn" />
 
             <Region VBox.vgrow="ALWAYS" />

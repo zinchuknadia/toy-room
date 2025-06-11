@@ -26,14 +26,6 @@ public class BudgetEditorController implements ToyRoomAware{
         updateLabel();
     }
 
-    public void setInitialBudget(double initialBudget) {
-        this.currentBudget = initialBudget;
-    }
-
-    public void setOnBudgetChanged(Consumer<Double> onBudgetChanged) {
-        this.onBudgetChanged = onBudgetChanged;
-    }
-
     private void updateLabel() {
         currentBudgetLabel.setText(String.format("Current Budget: $%.2f", currentBudget));
     }

@@ -40,4 +40,14 @@ public class ToyFactory {
             default: return 0;
         }
     }
+
+    public static String getImagePath(String type) {
+        switch (type) {
+            case "Doll": return "/images/doll.png";
+            case "Car": return "/images/car.png";
+            case "Ball": return "/images/ball.png";
+            case "Duck": return "/images/duck.png";
+            default: return "";
+        }
+    }
 }

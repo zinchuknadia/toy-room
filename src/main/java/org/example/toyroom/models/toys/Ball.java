@@ -5,7 +5,7 @@ import org.example.toyroom.models.Size;
 
 public class Ball extends Toy {
     public Ball(Size size, MyColor color, String material) {
-        super("ball", size, color, material);
+        super("ball", size, color, material, "/images/ball.png");
     }
 
     public Ball() {
