@@ -1,10 +1,9 @@
 package org.example.toyroom.service;
 
-import org.example.toyroom.ToyRoom;
+import org.example.toyroom.models.ToyRoom;
 import org.example.toyroom.models.Size;
 import org.example.toyroom.models.toys.Toy;
 import org.example.toyroom.repository.ToyRepository;
-import org.example.toyroom.service.ToyService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -31,11 +30,11 @@ public class ToyServiceTest {
         Toy toy = mock(Toy.class);
         when(toy.getPrice()).thenReturn(30.0);
 
-        boolean result = toyService.buyToy(toy);
+        boolean result = toyService.buyToy(toy, toyRoom);
 
         assertTrue(result);
         assertEquals(20.0, toyRoom.getBudget());
-        verify(toyRepository, times(1)).add(toy);
+        verify(toyRepository, times(1)).save(toy);
     }
 
     @Test
@@ -43,7 +42,7 @@ public class ToyServiceTest {
         Toy toy = mock(Toy.class);
         when(toy.getPrice()).thenReturn(100.0);
 
-        boolean result = toyService.buyToy(toy);
+        boolean result = toyService.buyToy(toy, toyRoom);
 
         assertFalse(result);
         assertEquals(50.0, toyRoom.getBudget());

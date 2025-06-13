@@ -5,11 +5,12 @@
 
 <BorderPane fx:id="mainPane" xmlns:fx="http://javafx.com/fxml/1"
             xmlns="http://javafx.com/javafx/21.0.7"
-            fx:controller="org.example.gui.MenuViewController"
-            stylesheets="@styles.css">
+            fx:controller="org.example.gui.toyRoom.MenuViewController"
+            stylesheets="@../styles.css">
 
     <left>
         <VBox styleClass="menu-button" spacing="10" style="-fx-background-color: #2c2f3a; -fx-padding: 40;">
+            <Button fx:id="backButton" onAction="#onBackButtonClicked" text="← Back" styleClass="menu-btn"/>
             <Button fx:id="mainButton" text="Main" onAction="#onMainButtonClicked" styleClass="menu-btn" />
             <Button fx:id="addToyButton" text="Add Toy" onAction="#onAddToy" styleClass="menu-btn" />
             <Button fx:id="editBudgetButton" text="Edit Budget" onAction="#handleEditBudget" styleClass="menu-btn" />

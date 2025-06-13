@@ -5,14 +5,15 @@ import org.example.toyroom.models.MyColor;
 import org.example.toyroom.models.Size;
 
 public class Toy {
-    private int id;
+    private Long id;
+    private Long roomId;
 
-    private String imagePath;
     private final StringProperty type = new SimpleStringProperty();
     private final ObjectProperty<Size> size = new SimpleObjectProperty<>();
     private final ObjectProperty<MyColor> color = new SimpleObjectProperty<>();
     private final StringProperty material = new SimpleStringProperty();
     private final DoubleProperty price = new SimpleDoubleProperty();
+    private String imagePath;
 
     public Toy() {}
 
@@ -41,13 +42,21 @@ public class Toy {
         this.imagePath = imagePath;
     }
 
-    // ======= ID — тільки для БД =======
-    public int getId() {
+    // ======= ID =======
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getRoomId() {
+        return roomId;
+    }
+
+    public void setRoomId(Long roomId) {
+        this.roomId = roomId;
     }
 
     // ======= Type =======

@@ -11,10 +11,10 @@
            prefWidth="200"
            StackPane.alignment="TOP_CENTER"
            styleClass="toy-card"
-           fx:controller="org.example.gui.ToyCardController"
+           fx:controller="org.example.gui.toyRoom.ToyCardController"
            xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
-           stylesheets="@styles.css">
+           stylesheets="@../styles.css">
 
     <VBox fx:id="cardBox"
           spacing="10"

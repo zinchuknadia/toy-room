@@ -95,14 +95,14 @@
     -fx-font-size: 16px;
 }
 
-.toy-card {
+.toy-card, toy-room-card{
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 1);
     -fx-border-radius: 10px;
     -fx-padding: 10px;
     -fx-max-width: Infinity;
 }
 
-.toy-card-box {
+.toy-card-box, toy-room-card-box{
     -fx-background-color: #ffffff;
     -fx-padding: 10;
     -fx-border-width: 4 0 0 0;
@@ -190,3 +190,4 @@
     -fx-pref-height: 36px;
     -fx-font-size: 14px;
 }
+

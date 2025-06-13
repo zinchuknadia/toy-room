@@ -1,4 +1,4 @@
-package org.example.gui;
+package org.example.gui.toyRoom;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;

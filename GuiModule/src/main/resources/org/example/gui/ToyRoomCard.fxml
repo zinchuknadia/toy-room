@@ -1,0 +1,33 @@
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Button?>
+<?import javafx.geometry.Insets?>
+
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.image.ImageView?>
+
+<VBox fx:id="cardBox" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.example.gui.ToyRoomCardController"
+      spacing="5"
+      alignment="TOP_CENTER"
+      maxWidth="Infinity"
+      styleClass="toy-room-card-box"
+      stylesheets="@styles.css">
+
+    <HBox alignment="TOP_RIGHT" prefHeight="20">
+        <Button fx:id="menuButton" text="⋮" styleClass="menu-icon-button"/>
+    </HBox>
+
+    <Region VBox.vgrow="ALWAYS" />
+
+    <ImageView fx:id="toyImage" fitWidth="120" fitHeight="120" preserveRatio="true" />
+
+    <VBox alignment="CENTER" spacing="5">
+        <Label fx:id="nameLabel" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+        <Label fx:id="themeLabel"/>
+        <Label fx:id="budgetLabel"/>
+    </VBox>
+
+    <Button fx:id="openButton" text="Open" styleClass="form-button"/>
+</VBox>

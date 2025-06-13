@@ -1,7 +1,8 @@
-package org.example.toyroom.models;
+package org.example.toyroom.factory;
 
+import org.example.toyroom.models.MyColor;
+import org.example.toyroom.models.Size;
 import org.example.toyroom.models.toys.*;
-import org.example.toyroom.service.ToyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

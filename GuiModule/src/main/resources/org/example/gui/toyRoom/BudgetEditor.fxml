@@ -3,10 +3,10 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane fx:controller="org.example.gui.BudgetEditorController"
+<BorderPane fx:controller="org.example.gui.toyRoom.BudgetEditorController"
             xmlns:fx="http://javafx.com/fxml/1"
             xmlns="http://javafx.com/javafx/21.0.7"
-            stylesheets="@styles.css">
+            stylesheets="@../styles.css">
 
     <center>
         <VBox spacing="10" alignment="CENTER" maxWidth="300">

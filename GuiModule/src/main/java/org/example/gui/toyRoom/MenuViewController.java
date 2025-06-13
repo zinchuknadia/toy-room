@@ -1,30 +1,38 @@
-package org.example.gui;
+package org.example.gui.toyRoom;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
-import org.example.toyroom.ToyRoom;
+import javafx.stage.Stage;
+//import org.example.gui.SetBudgetController;
+import org.example.toyroom.models.ToyRoom;
 import org.example.toyroom.models.toys.Toy;
+import org.example.toyroom.service.ToyRoomService;
+import org.example.toyroom.service.ToyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.List;
 
-public class MenuViewController {
+public class MenuViewController implements ToyRoomAware {
     private static final Logger logger = LoggerFactory.getLogger(MenuViewController.class);
 
     private ToyRoom toyRoom;
-    @FXML
-    private Label budgetLabel;
+    private ToyService toyService;
+
+    @FXML private Label budgetLabel;
 
     @FXML private StackPane contentPane;
 
+    @FXML private Button backButton;
     @FXML private Button addToyButton;
     @FXML private Button editBudgetButton;
     @FXML private Button mainButton;
@@ -32,8 +40,10 @@ public class MenuViewController {
 
     private final ObservableList<Toy> toys = FXCollections.observableArrayList();
 
-    public void setToyRoom(ToyRoom toyRoom) {
+    public void setToyRoomAndService(ToyRoom toyRoom, ToyService toyService) {
         this.toyRoom = toyRoom;
+        this.toyService = toyService;
+
         refreshTable();
 
         // Now enable menu
@@ -42,7 +52,7 @@ public class MenuViewController {
         updateBudgetLabel();
 
         // Load default view
-        loadContent("MainView.fxml");
+        loadContent("ToyRoomView.fxml");
         highlightButton(mainButton);
 
         toyRoom.budgetProperty().addListener((obs, oldVal, newVal) -> updateBudgetLabel());
@@ -56,23 +66,39 @@ public class MenuViewController {
 
     @FXML
     public void initialize() {
-        loadContent("SetBudgetView.fxml");
-        setMenuEnabled(false);
+//        setMenuEnabled(false);
+//        backButton.setVisible(false); // Hide back button initially
+//        backButton.setOnAction(e -> onBackButtonClicked()); // Hook up back click
     }
 
+    @FXML
+    private void onBackButtonClicked() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/gui/MainView.fxml"));
+            Parent root = loader.load();
+
+            Scene scene = backButton.getScene(); // Use any control to get the scene
+            scene.setRoot(root);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     private void setMenuEnabled(boolean enabled) {
-        for (Button button : List.of(mainButton, addToyButton, editBudgetButton)) {
+        for (Button button : List.of(backButton, mainButton, addToyButton, editBudgetButton)) {
             button.setDisable(!enabled);
         }
     }
 
     private void refreshTable() {
-        toys.setAll(toyRoom.getToyService().getAllToys());
+        toys.setAll(toyService.getToysByRoomId(toyRoom.getId()));
     }
 
     @FXML
     public void onMainButtonClicked() {
-        loadContent("MainView.fxml");
+        loadContent("ToyRoomView.fxml");
         highlightButton(mainButton);
     }
 
@@ -97,12 +123,12 @@ public class MenuViewController {
             Object controller = loader.getController();
 
             if (controller instanceof ToyRoomAware) {
-                ((ToyRoomAware) controller).setToyRoom(toyRoom);
+                ((ToyRoomAware) controller).setToyRoomAndService(toyRoom, toyService);
             }
 
-            if (controller instanceof SetBudgetController) {
-                ((SetBudgetController) controller).setMainController(this);
-            }
+//            if (controller instanceof SetBudgetController) {
+//                ((SetBudgetController) controller).setMainController(this);
+//            }
 
             contentPane.getChildren().setAll(node);
         } catch (IOException e) {
@@ -113,7 +139,7 @@ public class MenuViewController {
 
     private void highlightButton(Button selectedButton) {
         // Remove "selected" from all buttons
-        for (Button button : List.of(mainButton, addToyButton, editBudgetButton)) {
+        for (Button button : List.of(backButton, mainButton, addToyButton, editBudgetButton)) {
             button.getStyleClass().remove("selected");
         }
         // Add "selected" to the active button

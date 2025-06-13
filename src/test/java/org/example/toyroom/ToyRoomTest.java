@@ -2,6 +2,7 @@ package org.example.toyroom;
 
 import javafx.beans.property.DoubleProperty;
 import org.example.toyroom.models.Size;
+import org.example.toyroom.models.ToyRoom;
 import org.example.toyroom.service.ToyService;
 import org.junit.jupiter.api.Test;
 

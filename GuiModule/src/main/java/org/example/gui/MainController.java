@@ -1,92 +1,116 @@
 package org.example.gui;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
-import org.example.toyroom.ToyRoom;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
+import org.example.gui.toyRoom.MenuViewController;
+import org.example.gui.toyRoom.ToyCard;
+import org.example.toyroom.entity.ToyRoomEntity;
+import org.example.toyroom.mapper.ToyRoomMapper;
+import org.example.toyroom.models.ToyRoom;
+import org.example.toyroom.models.ToyRoomManager;
 import org.example.toyroom.models.toys.Toy;
+import org.example.toyroom.repository.ToyRepository;
+import org.example.toyroom.repository.ToyRoomRepository;
+import org.example.toyroom.service.ToyRoomService;
 import org.example.toyroom.service.ToyService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.List;
 
-public class MainController implements ToyRoomAware{
-    private static final Logger logger = LoggerFactory.getLogger(MainController.class);
+public class MainController {
+    @FXML private ScrollPane scrollPane;
+    @FXML private GridPane toyRoomGrid;
 
-    @FXML private TextField searchField;
-    @FXML private MenuButton sortMenuButton;
-    @FXML private GridPane toyGrid;
-
-    ToyRoom toyRoom;
-    ToyService toyService;
-    private final List<String> selectedSorts = new ArrayList<>();
-
-    @Override
-    public void setToyRoom(ToyRoom toyRoom) {
-        this.toyRoom = toyRoom;
-        toyService = toyRoom.getToyService();
-        refreshToyGrid();
-    }
+    private ToyRoomManager manager = new ToyRoomManager();
+    private EntityManager em;
+    private ToyRoomService toyRoomService;
 
     @FXML
     public void initialize() {
-        initSortMenu();
-        initSearch();
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("toyroomPU");
+        em = emf.createEntityManager();
+        toyRoomService = new ToyRoomService(new ToyRoomRepository(em));
+
+        loadToyRoomsFromDB();
     }
 
-    private void initSortMenu() {
-        ToggleGroup sortGroup = new ToggleGroup();
-        String[] options = {"type", "size", "material", "price"};
+    private void loadToyRoomsFromDB() {
+        toyRoomGrid.getChildren().clear();
+        List<ToyRoom> rooms = toyRoomService.getAll();
 
-        RadioMenuItem noneItem = new RadioMenuItem("None");
-        noneItem.setToggleGroup(sortGroup);
-        noneItem.setSelected(true); // default
-        noneItem.setOnAction(e -> {
-            selectedSorts.clear();
-            sortMenuButton.setText("Sort"); // Reset label
-            refreshToyGrid();
-        });
-        sortMenuButton.getItems().add(noneItem);
+        int col = 0, row = 0;
+        final int MAX_COLS = 5; // можна змінити кількість колонок
 
-        for (String opt : options) {
-            RadioMenuItem item = new RadioMenuItem(capitalize(opt));
-            item.setToggleGroup(sortGroup);
-            item.setOnAction(e -> {
-                selectedSorts.clear();
-                selectedSorts.add(opt);
-                sortMenuButton.setText(capitalize(opt)); // Update label to selected option
-                refreshToyGrid();
-            });
-            sortMenuButton.getItems().add(item);
+        for (ToyRoom room : rooms) {
+            VBox card = createToyRoomCard(room);
+            toyRoomGrid.add(card, col++, row);
+            manager.addToyRoom(room);
+
+            if (col == MAX_COLS) {
+                col = 0;
+                row++;
+            }
         }
     }
 
-    private String capitalize(String text) {
-        if (text == null || text.isEmpty()) return text;
-        return text.substring(0, 1).toUpperCase() + text.substring(1);
+    private VBox createToyRoomCard(ToyRoom toyRoom) {
+        VBox box = new VBox(5);
+        box.setStyle("-fx-border-color: #ccc; -fx-border-radius: 10; -fx-padding: 10; -fx-background-radius: 10; -fx-background-color: #f9f9f9;");
+        box.setOnMouseClicked(e -> openToyRoomViewInSameWindow(toyRoom, new ToyService(new ToyRepository(em))));
+
+        Text nameText = new Text("Name: " + toyRoom.getName());
+        Text themeText = new Text("Theme: " + toyRoom.getThemeName());
+        Text budgetText = new Text("Budget: " + toyRoom.getBudget());
+
+        box.getChildren().addAll(nameText, themeText, budgetText);
+        return box;
     }
 
+    @FXML
+    private void openAddToyRoomWindow() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("AddToyRoomView.fxml"));
+            Parent root = loader.load();
 
-    private void initSearch() {
-        searchField.setOnKeyReleased(e -> refreshToyGrid());
-    }
-
-    private void refreshToyGrid() {
-        toyGrid.getChildren().clear();
-        String keyword = searchField.getText();
-        List<Toy> toys = toyService.searchAndSortToys(keyword, selectedSorts);
-
-        int col = 0, row = 0;
-        for (Toy toy : toys) {
-            Node card = ToyCard.create(toy, () -> {
-                toyService.deleteToy(toy.getId());
-                refreshToyGrid();
+            AddToyRoomController controller = loader.getController();
+            controller.setListener(toyRoom -> {
+                System.out.println("ToyRoom received in MainController: " + toyRoom);
+                manager.addToyRoom(toyRoom);
+                toyRoomService.saveToyRoom(toyRoom);
+                loadToyRoomsFromDB();
             });
-            toyGrid.add(card, col++, row);
-            if (col == 3) { col = 0; row++; }
+
+            Stage stage = new Stage();
+            stage.setTitle("Create ToyRoom");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openToyRoomViewInSameWindow(ToyRoom toyRoom, ToyService toyService) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/gui/toyRoom/MenuView.fxml"));
+            Parent root = loader.load();
+            MenuViewController controller = loader.getController();
+            controller.setToyRoomAndService(toyRoom, toyService);
+
+            scrollPane.getScene().setRoot(root);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

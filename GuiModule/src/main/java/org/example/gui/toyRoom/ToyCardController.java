@@ -1,4 +1,4 @@
-package org.example.gui;
+package org.example.gui.toyRoom;
 
 import javafx.fxml.FXML;
 import javafx.geometry.Side;
@@ -8,7 +8,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import org.example.toyroom.models.MyColor;
 import org.example.toyroom.models.toys.Toy;
-import org.example.toyroom.service.ToyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

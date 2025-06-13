@@ -1,17 +1,24 @@
-package org.example.gui;
+package org.example.gui.toyRoom;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import org.example.toyroom.ToyRoom;
+import org.example.toyroom.models.ToyRoom;
 import org.example.toyroom.models.MyColor;
 import org.example.toyroom.models.Size;
-import org.example.toyroom.models.ToyFactory;
+import org.example.toyroom.factory.ToyFactory;
 import org.example.toyroom.models.toys.Toy;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.paint.Color;
+import org.example.toyroom.repository.ToyRepository;
+import org.example.toyroom.repository.ToyRoomRepository;
+import org.example.toyroom.service.ToyRoomService;
+import org.example.toyroom.service.ToyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,6 +27,8 @@ public class AddToyController implements ToyRoomAware {
     private static final Logger logger = LoggerFactory.getLogger(AddToyController.class);
 
     private ToyRoom toyRoom;
+    private ToyService toyService;
+    private ToyRoomService toyRoomService;
 
     @FXML private ComboBox<String> typeComboBox;
     @FXML private ComboBox<Size> sizeComboBox;
@@ -28,9 +37,10 @@ public class AddToyController implements ToyRoomAware {
     @FXML private Label priceLabel;
 
     @Override
-    public void setToyRoom(ToyRoom toyRoom) {
+    public void setToyRoomAndService(ToyRoom toyRoom, ToyService toyService) {
         this.toyRoom = toyRoom;
-    }
+        this.toyService = toyService;
+        }
 
     public void initialize() {
         typeComboBox.getItems().addAll(ToyFactory.getToyTypes());
@@ -40,6 +50,10 @@ public class AddToyController implements ToyRoomAware {
             priceLabel.setText("Price: $" + price);
         });
         sizeComboBox.getItems().addAll(Size.values());
+
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("toyroomPU");
+        EntityManager em = emf.createEntityManager();
+        toyRoomService = new ToyRoomService(new ToyRoomRepository(em));
     }
 
     @FXML
@@ -72,13 +86,17 @@ public class AddToyController implements ToyRoomAware {
             toy.setPrice(price);
             toy.setImagePath(imagePath);
 
-            boolean success = toyRoom.getToyService().buyToy(toy);
+            toy.setRoomId(toyRoom.getId());
+
+            boolean success = toyService.buyToy(toy, toyRoom);
             if(success){
                 showAlert("Toy added successfully!");
             }else{
                 showAlert("Not enough money!");
                 logger.warn("Not enough money!");
             }
+            toyRoomService.updateBudget(toyRoom);
+            toyRoomService.updateUpdatedAt(toyRoom.getId());
             clearFields();
         } catch (NumberFormatException e) {
             showAlert("Error: " + e.getMessage());
