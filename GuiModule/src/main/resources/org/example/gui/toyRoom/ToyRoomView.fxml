@@ -10,7 +10,7 @@
     <top>
         <HBox spacing="10" alignment="CENTER_LEFT" style="-fx-padding: 10;">
             <TextField fx:id="searchField" promptText="Search..." HBox.hgrow="ALWAYS"/>
-            <MenuButton fx:id="sortMenuButton" text="Sort" HBox.hgrow="ALWAYS"/>
+            <MenuButton fx:id="sortMenuButton" text="Sort" HBox.hgrow="ALWAYS" styleClass="sort-menu-button"/>
         </HBox>
     </top>
     <center>

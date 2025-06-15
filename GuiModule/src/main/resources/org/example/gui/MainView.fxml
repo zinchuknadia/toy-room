@@ -8,6 +8,9 @@
 
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.layout.Region?>
+
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
       fx:controller="org.example.gui.MainController" spacing="15" alignment="CENTER"
       stylesheets="@styles.css">
@@ -16,12 +19,21 @@
         <Insets top="20" right="20" bottom="20" left="20"/>
     </padding>
 
+    <!-- Title -->
+    <Label text="Toy Room Manager"
+           style="-fx-font-size: 24px; -fx-font-weight: bold;" />
 
-    <Label text="Toy Room Manager" style="-fx-font-size: 24px; -fx-font-weight: bold;" />
+    <!-- Buttons Row (right-aligned) -->
+    <HBox spacing="10" alignment="CENTER_RIGHT" prefWidth="Infinity">
+        <Region fx:id="spacer" HBox.hgrow="ALWAYS"/>
+        <MenuButton fx:id="sortMenuButton" text="Sort" styleClass="sort-menu-button"/>
+        <Button text="More" onAction="#handleMore" styleClass="form-button"/>
+    </HBox>
 
     <ScrollPane fx:id="scrollPane" fitToWidth="true">
         <GridPane fx:id="toyRoomGrid" hgap="10" vgap="10" style="-fx-padding: 10;"/>
     </ScrollPane>
+
     <HBox spacing="10" alignment="CENTER">
         <Button text="Add ToyRoom" onAction="#openAddToyRoomWindow" styleClass="form-button"/>
     </HBox>

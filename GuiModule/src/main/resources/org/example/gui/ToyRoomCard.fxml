@@ -7,27 +7,37 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.image.ImageView?>
 
-<VBox fx:id="cardBox" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="org.example.gui.ToyRoomCardController"
-      spacing="5"
-      alignment="TOP_CENTER"
-      maxWidth="Infinity"
-      styleClass="toy-room-card-box"
-      stylesheets="@styles.css">
+<?import javafx.scene.layout.StackPane?>
+<StackPane fx:id="card"
+           maxWidth="Infinity"
+           prefWidth="200"
+           StackPane.alignment="TOP_CENTER"
+           styleClass="toy-room-card"
+           fx:controller="org.example.gui.ToyRoomCardController"
+           xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           stylesheets="@styles.css">
 
-    <HBox alignment="TOP_RIGHT" prefHeight="20">
-        <Button fx:id="menuButton" text="⋮" styleClass="menu-icon-button"/>
-    </HBox>
+    <VBox fx:id="cardBox"
+          spacing="5"
+          alignment="TOP_CENTER"
+          maxWidth="Infinity"
+          styleClass="toy-room-card-box">
 
-    <Region VBox.vgrow="ALWAYS" />
+        <HBox alignment="TOP_RIGHT" prefHeight="20">
+            <Button fx:id="menuButton" text="🗑" styleClass="menu-icon-button"/>
+        </HBox>
 
-    <ImageView fx:id="toyImage" fitWidth="120" fitHeight="120" preserveRatio="true" />
+        <Region VBox.vgrow="ALWAYS" />
 
-    <VBox alignment="CENTER" spacing="5">
-        <Label fx:id="nameLabel" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
-        <Label fx:id="themeLabel"/>
-        <Label fx:id="budgetLabel"/>
+        <ImageView fx:id="toyRoomImage" fitWidth="120" fitHeight="120" preserveRatio="true" />
+
+        <VBox alignment="CENTER" spacing="5">
+            <Label fx:id="nameLabel" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+            <Label fx:id="themeLabel"/>
+            <Label fx:id="budgetLabel"/>
+        </VBox>
+
+    <!--    <Button fx:id="openButton" text="Open" styleClass="form-button"/>-->
     </VBox>
-
-    <Button fx:id="openButton" text="Open" styleClass="form-button"/>
-</VBox>
+</StackPane>

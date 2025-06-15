@@ -26,13 +26,27 @@ public class ThemeService {
         return themeRepository.findById(id);
     }
 
-    public List<ThemeInfo> getAllThemes() {
-        return themeRepository.findAll().stream()
-                .map(ThemeMapper::toModel)
-                .collect(Collectors.toList());
+//    public List<ThemeInfo> getAllThemes() {
+//        return themeRepository.findAll().stream()
+//                .map(ThemeMapper::toModel)
+//                .collect(Collectors.toList());
+//    }
+
+    public List<Theme> getAllThemes() {
+        return themeRepository.findAll();
     }
 
     public void deleteTheme(Long id) {
         themeRepository.deleteById(id);
+    }
+
+    public Theme getThemeByName(String themeName) {
+        return themeRepository.findByName(themeName);
+    }
+
+    public List<String> getAllThemeNames() {
+        return themeRepository.findAll().stream()
+                .map(Theme::getName)
+                .collect(Collectors.toList());
     }
 }

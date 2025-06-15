@@ -1,7 +1,6 @@
 package org.example.toyroom.models;
 
 import org.example.toyroom.factory.ToyFactory;
-import org.example.toyroom.models.toys.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

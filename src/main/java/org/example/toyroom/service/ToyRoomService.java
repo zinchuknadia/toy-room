@@ -3,12 +3,15 @@ package org.example.toyroom.service;
 import org.example.toyroom.entity.Theme;
 import org.example.toyroom.entity.ToyRoomEntity;
 import org.example.toyroom.mapper.ToyRoomMapper;
+import org.example.toyroom.models.Toy;
 import org.example.toyroom.models.ToyRoom;
 import org.example.toyroom.repository.ToyRoomRepository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ToyRoomService {
     private final ToyRoomRepository repository;
@@ -62,4 +65,35 @@ public class ToyRoomService {
         }
     }
 
+    public void updateToyRoom(ToyRoom toyRoom) {
+        ToyRoomEntity entity = ToyRoomMapper.toEntity(toyRoom);
+        entity.setUpdatedAt(LocalDateTime.now());
+        repository.updateToyRoom(entity);
+    }
+
+    public List<ToyRoom> getSortedToyRooms(List<String> sortCriteria) {
+        List<ToyRoom> rooms = getAll();
+
+        // Sort
+        if (sortCriteria != null && !sortCriteria.isEmpty()) {
+            String crit = sortCriteria.get(0); // only first criterion
+            Comparator<ToyRoom> comparator = switch (crit) {
+//                case "name" -> Comparator.comparing(ToyRoom::getName);
+                case "size" -> Comparator.comparingInt((ToyRoom room) -> room.getToys().size()).reversed();
+//                case "theme" -> Comparator.comparing(ToyRoom::getThemeName);
+                case "budget" -> Comparator.comparingDouble(ToyRoom::getBudget).reversed();
+                case "last modified" -> Comparator.comparing(ToyRoom::getUpdatedAt).reversed();
+                default -> null;
+            };
+
+            if (comparator != null) {
+                rooms = rooms.stream().sorted(comparator).collect(Collectors.toList());
+            }
+        }
+
+        // Convert entities to models
+        return rooms;
+//                .map(ToyMapper::toModel)
+//                .collect(Collectors.toList());
+    }
 }

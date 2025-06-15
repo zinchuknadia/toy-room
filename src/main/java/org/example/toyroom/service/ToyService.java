@@ -1,15 +1,11 @@
 package org.example.toyroom.service;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
 import org.example.toyroom.entity.ToyEntity;
 import org.example.toyroom.entity.Type;
 import org.example.toyroom.mapper.ToyMapper;
 import org.example.toyroom.models.ToyRoom;
-import org.example.toyroom.models.toys.Toy;
+import org.example.toyroom.models.Toy;
 import org.example.toyroom.repository.ToyRepository;
-import org.example.toyroom.repository.ToyRoomRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,6 +60,11 @@ public class ToyService {
         return toys;
     }
 
+    public Toy getToyByTypeName(String typeName) {
+        ToyEntity toyEntity = repository.findByTypeName(typeName);
+        return ToyMapper.toModel(toyEntity);
+    }
+
     public void deleteById(Long id) {
         repository.deleteById(id);
     }
@@ -81,14 +82,14 @@ public class ToyService {
     }
 
     public List<Toy> searchAndSortToys(ToyRoom toyRoom, String keyword, List<String> sortCriteria) {
-        List<ToyEntity> toys = repository.findByToyRoomId(toyRoom.getId());
+        List<Toy> toys = getToysByRoomId(toyRoom.getId());
 
         // Filter
         if (keyword != null && !keyword.isBlank()) {
             String lowerKeyword = keyword.toLowerCase();
             toys = toys.stream()
                     .filter(toy -> toy.getSize().toString().toLowerCase().contains(lowerKeyword)
-                            || toy.getType().getName().toLowerCase().contains(lowerKeyword)
+                            || toy.getType().toLowerCase().contains(lowerKeyword)
                             || toy.getMaterial().toLowerCase().contains(lowerKeyword))
                     .collect(Collectors.toList());
         }
@@ -96,11 +97,11 @@ public class ToyService {
         // Sort
         if (sortCriteria != null && !sortCriteria.isEmpty()) {
             String crit = sortCriteria.get(0); // only first criterion
-            Comparator<ToyEntity> comparator = switch (crit) {
-                case "type" -> Comparator.comparing(toy -> toy.getType().getName());
-                case "size" -> Comparator.comparing(ToyEntity::getSize);
-                case "material" -> Comparator.comparing(ToyEntity::getMaterial);
-                case "price" -> Comparator.comparingDouble(ToyEntity::getPrice).reversed();
+            Comparator<Toy> comparator = switch (crit) {
+                case "type" -> Comparator.comparing(toy -> toy.getType());
+                case "size" -> Comparator.comparing(Toy::getSize);
+                case "material" -> Comparator.comparing(Toy::getMaterial);
+                case "price" -> Comparator.comparingDouble(Toy::getPrice).reversed();
                 default -> null;
             };
 
@@ -110,8 +111,8 @@ public class ToyService {
         }
 
         // Convert entities to models
-        return toys.stream()
-                .map(ToyMapper::toModel)
-                .collect(Collectors.toList());
+        return toys;
+//                .map(ToyMapper::toModel)
+//                .collect(Collectors.toList());
     }
 }

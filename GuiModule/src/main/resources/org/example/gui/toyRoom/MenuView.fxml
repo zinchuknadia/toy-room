@@ -10,10 +10,13 @@
 
     <left>
         <VBox styleClass="menu-button" spacing="10" style="-fx-background-color: #2c2f3a; -fx-padding: 40;">
+
+            <Label fx:id="roomTitle" styleClass="budget-title"/>
+
             <Button fx:id="backButton" onAction="#onBackButtonClicked" text="← Back" styleClass="menu-btn"/>
             <Button fx:id="mainButton" text="Main" onAction="#onMainButtonClicked" styleClass="menu-btn" />
             <Button fx:id="addToyButton" text="Add Toy" onAction="#onAddToy" styleClass="menu-btn" />
-            <Button fx:id="editBudgetButton" text="Edit Budget" onAction="#handleEditBudget" styleClass="menu-btn" />
+            <Button fx:id="settingsButton" text="Settings" onAction="#changeSettings" styleClass="menu-btn" />
 
             <Region VBox.vgrow="ALWAYS" />
 

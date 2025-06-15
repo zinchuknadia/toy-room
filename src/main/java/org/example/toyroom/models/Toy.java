@@ -1,8 +1,6 @@
-package org.example.toyroom.models.toys;
+package org.example.toyroom.models;
 
 import javafx.beans.property.*;
-import org.example.toyroom.models.MyColor;
-import org.example.toyroom.models.Size;
 
 public class Toy {
     private Long id;
@@ -32,6 +30,13 @@ public class Toy {
         this.material.set(material);
         this.price.set(price);
         this.imagePath = imagePath;
+    }
+
+    public Toy(String type, Size size, MyColor color, String material) {
+        this.type.set(type);
+        this.size.set(size);
+        this.color.set(color);
+        this.material.set(material);
     }
 
     public String getImagePath(){

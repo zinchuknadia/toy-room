@@ -2,6 +2,7 @@ package org.example.toyroom.models.toys;
 
 import org.example.toyroom.models.MyColor;
 import org.example.toyroom.models.Size;
+import org.example.toyroom.models.Toy;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

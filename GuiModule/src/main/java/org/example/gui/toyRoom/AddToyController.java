@@ -12,13 +12,14 @@ import org.example.toyroom.models.ToyRoom;
 import org.example.toyroom.models.MyColor;
 import org.example.toyroom.models.Size;
 import org.example.toyroom.factory.ToyFactory;
-import org.example.toyroom.models.toys.Toy;
+import org.example.toyroom.models.Toy;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.paint.Color;
-import org.example.toyroom.repository.ToyRepository;
 import org.example.toyroom.repository.ToyRoomRepository;
+import org.example.toyroom.repository.TypeRepository;
 import org.example.toyroom.service.ToyRoomService;
 import org.example.toyroom.service.ToyService;
+import org.example.toyroom.service.TypeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,6 +30,7 @@ public class AddToyController implements ToyRoomAware {
     private ToyRoom toyRoom;
     private ToyService toyService;
     private ToyRoomService toyRoomService;
+    private TypeService typeService;
 
     @FXML private ComboBox<String> typeComboBox;
     @FXML private ComboBox<Size> sizeComboBox;
@@ -43,35 +45,38 @@ public class AddToyController implements ToyRoomAware {
         }
 
     public void initialize() {
-        typeComboBox.getItems().addAll(ToyFactory.getToyTypes());
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("toyroomPU");
+        EntityManager em = emf.createEntityManager();
+        toyRoomService = new ToyRoomService(new ToyRoomRepository(em));
+        typeService = new TypeService(new TypeRepository(em));
+
+
+        typeComboBox.getItems().addAll(typeService.getAllTypeNames());
         typeComboBox.setOnAction(e -> {
             String selectedType = typeComboBox.getValue();
-            double price = ToyFactory.getPrice(selectedType);
+            double price = typeService.getTypeByName(selectedType).getPrice();
             priceLabel.setText("Price: $" + price);
         });
         sizeComboBox.getItems().addAll(Size.values());
 
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("toyroomPU");
-        EntityManager em = emf.createEntityManager();
-        toyRoomService = new ToyRoomService(new ToyRoomRepository(em));
     }
 
     @FXML
     public void handleAddToy() {
-        String type = typeComboBox.getValue();
-        String sizeStr = sizeComboBox.getValue().toString();
-        String material = materialField.getText();
-
-        if (type == null || sizeStr.isEmpty() || material.isEmpty()) {
-            showAlert("Please fill in all fields.");
-            logger.warn("ToyRoom: type: {} size: {} material: {}", type, sizeStr, material);
-            return;
-        }
-
         try {
+            String type = typeComboBox.getValue();
+            String sizeStr = sizeComboBox.getValue().toString();
+            String material = materialField.getText();
+
+            if (type == null || sizeStr.isEmpty() || material.isEmpty()) {
+                showAlert("Please fill in all fields.");
+                logger.warn("ToyRoom: type: {} size: {} material: {}", type, sizeStr, material);
+                return;
+            }
+
             Size size = parseSize(sizeStr);
-            double price = ToyFactory.getPrice(type);
-            String imagePath = ToyFactory.getImagePath(type);
+            double price = typeService.getTypeByName(type).getPrice();
+            String imagePath = typeService.getTypeByName(type).getImage();
 
             Color fxColor = colorPicker.getValue();
             String hexColor = String.format("#%02x%02x%02x",
@@ -98,7 +103,7 @@ public class AddToyController implements ToyRoomAware {
             toyRoomService.updateBudget(toyRoom);
             toyRoomService.updateUpdatedAt(toyRoom.getId());
             clearFields();
-        } catch (NumberFormatException e) {
+        } catch (Exception e) {
             showAlert("Error: " + e.getMessage());
             logger.error(e.getMessage());
         }

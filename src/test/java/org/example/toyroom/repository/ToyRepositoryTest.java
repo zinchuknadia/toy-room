@@ -3,11 +3,10 @@ package org.example.toyroom.repository;
 import org.example.DatabaseConnector;
 import org.example.toyroom.models.MyColor;
 import org.example.toyroom.models.Size;
-import org.example.toyroom.models.toys.Toy;
+import org.example.toyroom.models.Toy;
 import org.junit.jupiter.api.*;
 
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane fx:controller="org.example.gui.toyRoom.ToyRoomSettingsController"
+            xmlns:fx="http://javafx.com/fxml/1"
+            xmlns="http://javafx.com/javafx/21.0.7"
+            stylesheets="@../styles.css">
+
+    <top>
+        <HBox alignment="TOP_RIGHT">
+            <padding>
+                <Insets top="10" right="10"/>
+            </padding>
+            <Button text="Delete"
+                    onAction="#handleDelete"
+                    styleClass="delete-button"/>
+        </HBox>
+    </top>
+
+    <center>
+        <VBox spacing="10" alignment="CENTER" maxWidth="300">
+            <padding>
+                <Insets top="40" right="20" bottom="20" left="20"/>
+            </padding>
+
+            <Label text="Toy Room Settings" styleClass="form-title"/>
+
+            <Label text="Room Name:" styleClass="form-title"/>
+            <TextField fx:id="nameField" promptText="Enter room name" styleClass="form-field"/>
+
+            <Label text="Theme:" styleClass="form-title"/>
+            <ComboBox fx:id="themeComboBox" styleClass="form-control"/>
+
+            <Label fx:id="currentBudgetLabel" text="Budget:" styleClass="form-title"/>
+            <TextField fx:id="amountField" promptText="Enter amount" styleClass="form-field"/>
+
+<!--            <HBox spacing="10" alignment="CENTER">-->
+<!--                <Button text="Add" onAction="#handleAdd" styleClass="form-button"/>-->
+<!--                <Button text="Subtract" onAction="#handleSubtract" styleClass="form-button"/>-->
+<!--            </HBox>-->
+
+            <Button text="Save" onAction="#handleSave" styleClass="form-button"/>
+
+        </VBox>
+    </center>
+</BorderPane>

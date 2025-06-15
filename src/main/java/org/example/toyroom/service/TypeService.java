@@ -1,5 +1,6 @@
 package org.example.toyroom.service;
 
+import org.example.toyroom.entity.Theme;
 import org.example.toyroom.entity.Type;
 import org.example.toyroom.mapper.TypeMapper;
 import org.example.toyroom.models.TypeInfo;
@@ -30,6 +31,16 @@ public class TypeService {
         return repository.findAll().stream()
                 .map(TypeMapper::toModel)
                 .collect(Collectors.toList());
+    }
+
+    public List<String> getAllTypeNames() {
+        return repository.findAll().stream()
+                .map(Type::getName)
+                .collect(Collectors.toList());
+    }
+
+    public Type getTypeByName(String name) {
+        return repository.findByName(name);
     }
 
     public void deleteById(Long id) {

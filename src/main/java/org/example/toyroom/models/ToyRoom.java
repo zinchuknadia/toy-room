@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class ToyRoom {
     private static final Logger logger = LoggerFactory.getLogger(ToyRoom.class);
@@ -17,6 +18,8 @@ public class ToyRoom {
     private final DoubleProperty budget = new SimpleDoubleProperty();
     private final ObjectProperty<LocalDateTime> createdAt = new SimpleObjectProperty<>();
     private final ObjectProperty<LocalDateTime> updatedAt = new SimpleObjectProperty<>();
+
+    private List<Toy> toys;
 
 //    private final ToyService toyService;
 
@@ -116,6 +119,14 @@ public class ToyRoom {
 
     public ObjectProperty<LocalDateTime> updatedAtProperty() {
         return updatedAt;
+    }
+
+    public List<Toy> getToys() {
+        return toys;
+    }
+
+    public void setToys(List<Toy> toys) {
+        this.toys = toys;
     }
 
 //    public ToyService getToyService() {

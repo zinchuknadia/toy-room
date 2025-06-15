@@ -3,11 +3,12 @@ package org.example.gui.toyRoom;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
-import org.example.toyroom.models.toys.Toy;
+import org.example.toyroom.models.Toy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.function.Consumer;
 
 public class ToyCard {
     private static final Logger logger = LoggerFactory.getLogger(ToyCard.class);

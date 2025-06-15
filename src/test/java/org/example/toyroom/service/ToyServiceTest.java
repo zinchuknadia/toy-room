@@ -2,7 +2,7 @@ package org.example.toyroom.service;
 
 import org.example.toyroom.models.ToyRoom;
 import org.example.toyroom.models.Size;
-import org.example.toyroom.models.toys.Toy;
+import org.example.toyroom.models.Toy;
 import org.example.toyroom.repository.ToyRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -10,11 +10,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
 //import org.example.gui.SetBudgetController;
 import org.example.toyroom.models.ToyRoom;
-import org.example.toyroom.models.toys.Toy;
-import org.example.toyroom.service.ToyRoomService;
+import org.example.toyroom.models.Toy;
 import org.example.toyroom.service.ToyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +22,7 @@ import java.util.List;
 
 public class MenuViewController implements ToyRoomAware {
     private static final Logger logger = LoggerFactory.getLogger(MenuViewController.class);
+    public Label roomTitle;
 
     private ToyRoom toyRoom;
     private ToyService toyService;
@@ -34,9 +33,8 @@ public class MenuViewController implements ToyRoomAware {
 
     @FXML private Button backButton;
     @FXML private Button addToyButton;
-    @FXML private Button editBudgetButton;
     @FXML private Button mainButton;
-
+    @FXML public Button settingsButton;
 
     private final ObservableList<Toy> toys = FXCollections.observableArrayList();
 
@@ -48,6 +46,8 @@ public class MenuViewController implements ToyRoomAware {
 
         // Now enable menu
         setMenuEnabled(true);
+
+        roomTitle.setText(toyRoom.getName());
 
         updateBudgetLabel();
 
@@ -87,7 +87,7 @@ public class MenuViewController implements ToyRoomAware {
 
 
     private void setMenuEnabled(boolean enabled) {
-        for (Button button : List.of(backButton, mainButton, addToyButton, editBudgetButton)) {
+        for (Button button : List.of(backButton, mainButton, addToyButton, settingsButton)) {
             button.setDisable(!enabled);
         }
     }
@@ -109,9 +109,9 @@ public class MenuViewController implements ToyRoomAware {
     }
 
     @FXML
-    public void handleEditBudget() throws IOException {
-        loadContent("BudgetEditor.fxml");
-        highlightButton(editBudgetButton);
+    public void changeSettings() throws IOException {
+        loadContent("ToyRoomSettings.fxml");
+        highlightButton(settingsButton);
     }
 
 
@@ -139,7 +139,7 @@ public class MenuViewController implements ToyRoomAware {
 
     private void highlightButton(Button selectedButton) {
         // Remove "selected" from all buttons
-        for (Button button : List.of(backButton, mainButton, addToyButton, editBudgetButton)) {
+        for (Button button : List.of(backButton, mainButton, addToyButton, settingsButton)) {
             button.getStyleClass().remove("selected");
         }
         // Add "selected" to the active button
@@ -147,5 +147,4 @@ public class MenuViewController implements ToyRoomAware {
             selectedButton.getStyleClass().add("selected");
         }
     }
-
 }

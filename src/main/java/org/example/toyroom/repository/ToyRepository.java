@@ -2,6 +2,8 @@ package org.example.toyroom.repository;
 
 import jakarta.persistence.EntityManager;
 import org.example.toyroom.entity.ToyEntity;
+import org.example.toyroom.entity.Type;
+import org.example.toyroom.mapper.TypeMapper;
 
 import java.util.List;
 
@@ -22,6 +24,14 @@ public class ToyRepository {
         return em.find(ToyEntity.class, id);
     }
 
+    public ToyEntity findByTypeName(String typeName) {
+//        Type type = TypeMapper.toEntity(typeName);
+//        long id = type.getId();
+        return em.createQuery("SELECT t FROM ToyEntity t WHERE t.type.name = :typeName", ToyEntity.class)
+                .setParameter("typeName", typeName)
+                .getSingleResult();
+    }
+
     public List<ToyEntity> findAll() {
         return em.createQuery("SELECT t FROM ToyEntity t", ToyEntity.class).getResultList();
     }
@@ -33,11 +43,10 @@ public class ToyRepository {
     }
 
     public void deleteById(Long id) {
-        ToyEntity toy = em.find(ToyEntity.class, id);
-        if (toy != null) {
-            em.getTransaction().begin();
-            em.remove(toy);
-            em.getTransaction().commit();
-        }
+        em.getTransaction().begin();
+        em.createQuery("DELETE FROM ToyEntity t WHERE t.id = :id")
+                .setParameter("id", id)
+                .executeUpdate();
+        em.getTransaction().commit();
     }
 }

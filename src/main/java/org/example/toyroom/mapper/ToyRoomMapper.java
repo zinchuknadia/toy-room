@@ -4,12 +4,17 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import org.example.toyroom.entity.Theme;
+import org.example.toyroom.entity.ToyEntity;
 import org.example.toyroom.entity.ToyRoomEntity;
+import org.example.toyroom.models.Toy;
 import org.example.toyroom.models.ToyRoom;
 import org.example.toyroom.repository.ThemeRepository;
 import org.example.toyroom.repository.ToyRepository;
 import org.example.toyroom.repository.ToyRoomRepository;
 import org.example.toyroom.service.ToyRoomService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ToyRoomMapper {
 
@@ -26,6 +31,14 @@ public class ToyRoomMapper {
         model.setCreatedAt(entity.getCreatedAt());
         model.setUpdatedAt(entity.getUpdatedAt());
         model.setBudget(entity.getBudget());
+
+        List<Toy> toys = new ArrayList<>();
+        for(ToyEntity toy : entity.getToys()){
+            Toy modelToy = ToyMapper.toModel(toy);
+            toys.add(modelToy);
+        }
+
+        model.setToys(toys);
 
 //        Theme theme = entity.getTheme();
 //        if (theme != null) {

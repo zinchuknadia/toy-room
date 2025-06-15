@@ -1,6 +1,7 @@
 package org.example.toyroom.models.toys;
 
 import org.example.toyroom.models.MyColor;
+import org.example.toyroom.models.Toy;
 import org.example.toyroom.models.toys.Ball;
 import org.example.toyroom.models.Size;
 import org.junit.jupiter.api.Test;

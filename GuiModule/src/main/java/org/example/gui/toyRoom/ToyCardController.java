@@ -7,9 +7,12 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import org.example.toyroom.models.MyColor;
-import org.example.toyroom.models.toys.Toy;
+import org.example.toyroom.models.Toy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Optional;
+import java.util.function.Consumer;
 
 public class ToyCardController {
     private static final Logger logger = LoggerFactory.getLogger(ToyCardController.class);
@@ -45,18 +48,29 @@ public class ToyCardController {
             cardBox.setStyle("-fx-border-color: " + hex + ";");
         }
 
-        ContextMenu menu = new ContextMenu();
-        menu.getStyleClass().add("toy-context-menu");
-
-        MenuItem deleteItem = new MenuItem("Delete");
-        deleteItem.getStyleClass().add("delete-menu-item");
-
-        deleteItem.setOnAction(e -> onDelete.run());
-        menu.getItems().add(deleteItem);
+//        ContextMenu menu = new ContextMenu();
+//        menu.getStyleClass().add("toy-context-menu");
+//
+//        MenuItem deleteItem = new MenuItem("Delete");
+//        deleteItem.getStyleClass().add("delete-menu-item");
+//
+//        deleteItem.setOnAction(e -> onDelete.run());
+//        menu.getItems().add(deleteItem);
 
         menuButton.setOnMouseClicked(e -> {
-            if (menu.isShowing()) menu.hide();
-            else menu.show(menuButton, Side.BOTTOM, 0, 0);
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Confirm Deletion");
+            alert.setHeaderText(null);
+            alert.setContentText("Are you sure you want to delete this toy?");
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                onDelete.run(); // тільки якщо користувач натиснув OK
+            }
         });
+//        {
+//            if (menu.isShowing()) menu.hide();
+//            else menu.show(menuButton, Side.BOTTOM, 0, 0);
+//        });
     }
 }

@@ -23,7 +23,7 @@
           maxWidth="Infinity">
 
         <HBox alignment="TOP_RIGHT" prefHeight="20">
-            <Button fx:id="menuButton" text="⋮" styleClass="menu-icon-button"/>
+            <Button fx:id="menuButton" text="🗑" styleClass="menu-icon-button"/>
         </HBox>
 
         <Region VBox.vgrow="ALWAYS" />

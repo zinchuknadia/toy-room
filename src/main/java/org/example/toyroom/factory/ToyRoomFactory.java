@@ -1,25 +1,32 @@
 package org.example.toyroom.factory;
 
-import org.example.toyroom.models.ToyRoom;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
+import org.example.toyroom.entity.Theme;
+import org.example.toyroom.entity.Type;
+import org.example.toyroom.models.*;
+import org.example.toyroom.repository.ThemeRepository;
+import org.example.toyroom.repository.TypeRepository;
+import org.example.toyroom.service.ThemeService;
+import org.example.toyroom.service.TypeService;
 
 import java.time.LocalDateTime;
 
 public class ToyRoomFactory {
 
-    public static ToyRoom createToyRoom(String name, String themeName, String themeImage, double initialBudget) {
-        ToyRoom toyRoom = new ToyRoom();
+    public static ToyRoom createToyRoom(String name, String themeName, double initialBudget) {
+       ToyRoom toyRoom = new ToyRoom(name, themeName, initialBudget);
 
-        toyRoom.setName(name);
-        toyRoom.setThemeName(themeName);
-        toyRoom.setThemeImage(themeImage);
-        toyRoom.setBudget(initialBudget);
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("toyroomPU");
+        EntityManager em = emf.createEntityManager();
+        ThemeService themeService = new ThemeService(new ThemeRepository(em));
+        Theme theme = themeService.getThemeByName(themeName);
+
+        toyRoom.setThemeImage(theme.getImage());
         toyRoom.setCreatedAt(LocalDateTime.now());
         toyRoom.setUpdatedAt(LocalDateTime.now());
 
         return toyRoom;
-    }
-
-    public static ToyRoom createDefaultRoom() {
-        return createToyRoom("My Toy Room", "Classic", "/images/classic.png", 100.0);
     }
 }

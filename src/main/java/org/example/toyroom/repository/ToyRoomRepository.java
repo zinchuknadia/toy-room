@@ -3,7 +3,10 @@ package org.example.toyroom.repository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import org.example.toyroom.entity.ToyRoomEntity;
+import org.example.toyroom.models.ToyRoom;
+import org.example.toyroom.service.ThemeService;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class ToyRoomRepository {
@@ -50,4 +53,23 @@ public class ToyRoomRepository {
             e.printStackTrace();
         }
     }
+
+    public void updateToyRoom(ToyRoomEntity toyRoom) {
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            ToyRoomEntity room = em.find(ToyRoomEntity.class, toyRoom.getId());
+            if (room != null) {
+                room.setName(toyRoom.getName());
+                room.setTheme(toyRoom.getTheme());
+                room.setUpdatedAt(LocalDateTime.now());
+                room.setBudget(toyRoom.getBudget());
+            }
+            tx.commit();
+        } catch (Exception e) {
+            if (tx.isActive()) tx.rollback();
+            e.printStackTrace();
+        }
+    }
+
 }

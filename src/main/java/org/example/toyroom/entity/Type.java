@@ -14,6 +14,7 @@ public class Type {
 
     private String name;    // e.g. "Plush", "Educational"
     private String image;   // Path or URL to icon/image
+    private double price;
 
     // Getters and setters
     public Long getId() { return id; }
@@ -23,4 +24,7 @@ public class Type {
 
     public String getImage() { return image; }
     public void setImage(String image) { this.image = image; }
+
+    public double getPrice() { return price; }
+    public void setPrice(double price) { this.price = price; }
 }
