@@ -1,9 +1,9 @@
 package org.example.toyroom.service;
 
-import org.example.toyroom.entity.Theme;
-import org.example.toyroom.mapper.ThemeMapper;
+import org.example.entity.Theme;
+import org.example.toyroom.mappers.ThemeMapper;
 import org.example.toyroom.models.ThemeInfo;
-import org.example.toyroom.repository.ThemeRepository;
+import org.example.repository.ThemeRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,12 +32,17 @@ public class ThemeService {
 //                .collect(Collectors.toList());
 //    }
 
-    public List<Theme> getAllThemes() {
-        return themeRepository.findAll();
+    public List<ThemeInfo> getAllThemes() {
+        return themeRepository.findAll().stream()
+                .map(ThemeMapper::toModel)
+                .collect(Collectors.toList());
     }
 
-    public void deleteTheme(Long id) {
-        themeRepository.deleteById(id);
+    public boolean deleteTheme(Long id) {
+        if(themeRepository.deleteById(id)){
+            return true;
+        }
+        return false;
     }
 
     public Theme getThemeByName(String themeName) {
@@ -48,5 +53,10 @@ public class ThemeService {
         return themeRepository.findAll().stream()
                 .map(Theme::getName)
                 .collect(Collectors.toList());
+    }
+
+    public void saveTheme(ThemeInfo theme) {
+        Theme themeEntity = ThemeMapper.toEntity(theme);
+        themeRepository.save(themeEntity);
     }
 }

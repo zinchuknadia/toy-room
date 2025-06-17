@@ -13,7 +13,10 @@ import javafx.scene.layout.StackPane;
 //import org.example.gui.SetBudgetController;
 import org.example.toyroom.models.ToyRoom;
 import org.example.toyroom.models.Toy;
+import org.example.toyroom.service.ThemeService;
+import org.example.toyroom.service.ToyRoomService;
 import org.example.toyroom.service.ToyService;
+import org.example.toyroom.service.TypeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,6 +29,9 @@ public class MenuViewController implements ToyRoomAware {
 
     private ToyRoom toyRoom;
     private ToyService toyService;
+    private ToyRoomService toyRoomService;
+    ThemeService themeService;
+    TypeService typeService;
 
     @FXML private Label budgetLabel;
 
@@ -55,7 +61,18 @@ public class MenuViewController implements ToyRoomAware {
         loadContent("ToyRoomView.fxml");
         highlightButton(mainButton);
 
+        roomTitle.setText(toyRoom.getName());
+        toyRoom.nameProperty().addListener((obs, oldVal, newVal) -> {
+            roomTitle.setText(newVal);
+        });
+
         toyRoom.budgetProperty().addListener((obs, oldVal, newVal) -> updateBudgetLabel());
+    }
+
+    public void setServices(ToyRoomService toyRoomService, ThemeService themeService, TypeService typeService) {
+        this.toyRoomService = toyRoomService;
+        this.themeService = themeService;
+        this.typeService = typeService;
     }
 
     public void updateBudgetLabel() {
@@ -126,9 +143,13 @@ public class MenuViewController implements ToyRoomAware {
                 ((ToyRoomAware) controller).setToyRoomAndService(toyRoom, toyService);
             }
 
-//            if (controller instanceof SetBudgetController) {
-//                ((SetBudgetController) controller).setMainController(this);
-//            }
+            if (controller instanceof ToyRoomSettingsController) {
+                ((ToyRoomSettingsController) controller).setServices(toyRoomService, themeService);
+            }
+
+            if (controller instanceof AddToyController) {
+                ((AddToyController) controller).setServices(toyRoomService, typeService);
+            }
 
             contentPane.getChildren().setAll(node);
         } catch (IOException e) {

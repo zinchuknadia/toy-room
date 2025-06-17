@@ -8,8 +8,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class ToyRoom {
-    private static final Logger logger = LoggerFactory.getLogger(ToyRoom.class);
-//    private final ToyService toyService;
 
     private Long id;
     private final StringProperty name = new SimpleStringProperty();
@@ -21,15 +19,12 @@ public class ToyRoom {
 
     private List<Toy> toys;
 
-//    private final ToyService toyService;
 
     public ToyRoom() {
-//        this.toyService = new ToyService(this);
         this.budget.set(0.0);
     }
 
     public ToyRoom(double initialBudget) {
-//        this.toyService = new ToyService(this);
         this.budget.set(initialBudget);
     }
 
@@ -128,10 +123,6 @@ public class ToyRoom {
     public void setToys(List<Toy> toys) {
         this.toys = toys;
     }
-
-//    public ToyService getToyService() {
-//        return toyService;
-//    }
 
     @Override
     public String toString() {

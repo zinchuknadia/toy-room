@@ -1,13 +1,12 @@
 package org.example.gui.toyRoom;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import org.example.toyroom.models.ToyRoom;
 import org.example.toyroom.models.MyColor;
 import org.example.toyroom.models.Size;
@@ -15,13 +14,13 @@ import org.example.toyroom.factory.ToyFactory;
 import org.example.toyroom.models.Toy;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.paint.Color;
-import org.example.toyroom.repository.ToyRoomRepository;
-import org.example.toyroom.repository.TypeRepository;
 import org.example.toyroom.service.ToyRoomService;
 import org.example.toyroom.service.ToyService;
 import org.example.toyroom.service.TypeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
 
 public class AddToyController implements ToyRoomAware {
 
@@ -31,7 +30,9 @@ public class AddToyController implements ToyRoomAware {
     private ToyService toyService;
     private ToyRoomService toyRoomService;
     private TypeService typeService;
+    private ToyFactory toyFactory;
 
+    @FXML private ImageView toyImagePreview;
     @FXML private ComboBox<String> typeComboBox;
     @FXML private ComboBox<Size> sizeComboBox;
     @FXML private ColorPicker colorPicker;
@@ -42,24 +43,38 @@ public class AddToyController implements ToyRoomAware {
     public void setToyRoomAndService(ToyRoom toyRoom, ToyService toyService) {
         this.toyRoom = toyRoom;
         this.toyService = toyService;
-        }
+    }
 
-    public void initialize() {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("toyroomPU");
-        EntityManager em = emf.createEntityManager();
-        toyRoomService = new ToyRoomService(new ToyRoomRepository(em));
-        typeService = new TypeService(new TypeRepository(em));
+    public void setServices(ToyRoomService toyRoomService, TypeService typeService) {
+        this.toyRoomService = toyRoomService;
+        this.typeService = typeService;
+        this.toyFactory = new ToyFactory(typeService);
 
-
+        // Now that services are ready, initialize dropdowns
         typeComboBox.getItems().addAll(typeService.getAllTypeNames());
+        sizeComboBox.getItems().addAll(Size.values());
+        toyImagePreview.setImage(new Image(getClass().getResource("/images/default.png").toExternalForm()));
+
         typeComboBox.setOnAction(e -> {
             String selectedType = typeComboBox.getValue();
-            double price = typeService.getTypeByName(selectedType).getPrice();
-            priceLabel.setText("Price: $" + price);
-        });
-        sizeComboBox.getItems().addAll(Size.values());
+            if (selectedType != null) {
+                var type = typeService.getTypeByName(selectedType);
+                if (type != null) {
+                    priceLabel.setText("Price: $" + type.getPrice());
 
+                    String imageFileName = type.getImage();
+                    File imageFile = new File("user-data/images/types", imageFileName);
+                    if (imageFile.exists()) {
+                        toyImagePreview.setImage(new Image(imageFile.toURI().toString()));
+                    } else {
+                        toyImagePreview.setImage(new Image(getClass().getResource("/images/default.png").toExternalForm()));
+                        logger.warn("Image not found for type: " + selectedType);
+                    }
+                }
+            }
+        });
     }
+
 
     @FXML
     public void handleAddToy() {
@@ -87,7 +102,7 @@ public class AddToyController implements ToyRoomAware {
 
             MyColor myColor = new MyColor(hexColor);
 
-            Toy toy = ToyFactory.createToy(type, size, myColor, material);
+            Toy toy = toyFactory.createToy(type, size, myColor, material);
             toy.setPrice(price);
             toy.setImagePath(imagePath);
 
@@ -105,7 +120,7 @@ public class AddToyController implements ToyRoomAware {
             clearFields();
         } catch (Exception e) {
             showAlert("Error: " + e.getMessage());
-            logger.error(e.getMessage());
+            logger.error("",e);
         }
     }
 

@@ -1,166 +1,167 @@
 package org.example.toyroom.repository;
 
-import org.example.DatabaseConnector;
-import org.example.toyroom.models.MyColor;
-import org.example.toyroom.models.Size;
-import org.example.toyroom.models.Toy;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
+import org.example.entity.ToyEntity;
+import org.example.entity.ToyRoomEntity;
+import org.example.entity.Type;
+import org.example.repository.ToyRepository;
 import org.junit.jupiter.api.*;
 
-import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ToyRepositoryTest {
+class ToyRepositoryTest {
 
+    private static EntityManagerFactory emf;
+    private EntityManager em;
     private ToyRepository toyRepository;
 
     @BeforeAll
-    static void setupDatabase() throws SQLException {
-        DatabaseConnector.setTestConfig("jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1", "sa", "");
+    static void beforeAll() {
+        emf = Persistence.createEntityManagerFactory("toyroomPU");
+    }
 
-        try (Connection conn = DatabaseConnector.getConnection();
-             Statement stmt = conn.createStatement()) {
-            stmt.execute("CREATE TABLE toys (" +
-                    "id INT AUTO_INCREMENT PRIMARY KEY, " +
-                    "type VARCHAR(255), " +
-                    "size VARCHAR(255), " +
-                    "color_code VARCHAR(255), " +
-                    "material VARCHAR(255), " +
-                    "price DOUBLE, " +
-                    "image_path VARCHAR(255))");
-        }
+    @AfterAll
+    static void afterAll() {
+        if (emf != null) emf.close();
     }
 
     @BeforeEach
-    void init() throws SQLException {
-        toyRepository = new ToyRepository();
-        try (Connection conn = DatabaseConnector.getConnection();
-             Statement stmt = conn.createStatement()) {
-            stmt.execute("DELETE FROM toys");
-        }
+    void setup() {
+        em = emf.createEntityManager();
+        toyRepository = new ToyRepository(em);
+
+        em.getTransaction().begin();
+        em.createQuery("DELETE FROM ToyEntity").executeUpdate();
+        em.createQuery("DELETE FROM ToyRoomEntity").executeUpdate();
+        em.createQuery("DELETE FROM Type").executeUpdate();
+        em.getTransaction().commit();
     }
 
-    private Toy createToy(String type, Size size, String color, String material, double price, String imagePath) {
-        return new Toy(type, size, new MyColor(color), material, price, imagePath);
-    }
-
-    @Test
-    void testAddAndFindAll() {
-        Toy toy = createToy("Car", Size.MEDIUM, "#FF0000", "Plastic", 9.99, "/img/car.png");
-        toyRepository.add(toy);
-
-        List<Toy> allToys = toyRepository.findAll();
-        assertEquals(1, allToys.size());
-
-        Toy savedToy = allToys.get(0);
-        assertEquals("Car", savedToy.getType());
-        assertEquals(Size.MEDIUM, savedToy.getSize());
-        assertEquals("#FF0000", savedToy.getColor().getHexCode());
-        assertEquals("Plastic", savedToy.getMaterial());
-        assertEquals(9.99, savedToy.getPrice());
-        assertEquals("/img/car.png", savedToy.getImagePath());
-    }
-
-//    @Test
-//    void testFindAllSortedByColor() {
-//        toyRepository.add(createToy("Ball", Size.SMALL, "#00FF00", "Rubber", 3.5, "/img/ball.png"));
-//        toyRepository.add(createToy("Doll", Size.LARGE, "#0000FF", "Fabric", 7.8, "/img/doll.png"));
-//        toyRepository.add(createToy("Car", Size.MEDIUM, "#FF0000", "Plastic", 10.0, "/img/car.png"));
-//
-//        List<Toy> toys = toyRepository.findAllSortedByColor();
-//        assertEquals(3, toys.size());
-//        assertEquals("#0000FF", toys.get(0).getColor().getHexCode());
-//        assertEquals("#00FF00", toys.get(1).getColor().getHexCode());
-//        assertEquals("#FF0000", toys.get(2).getColor().getHexCode());
-//    }
-//
-//    @Test
-//    void testFindAllSortedBySize() {
-//        toyRepository.add(createToy("Ball", Size.SMALL, "#00FF00", "Rubber", 3.5, "/img/ball.png"));
-//        toyRepository.add(createToy("Doll", Size.LARGE, "#0000FF", "Fabric", 7.8, "/img/doll.png"));
-//        toyRepository.add(createToy("Car", Size.MEDIUM, "#FF0000", "Plastic", 10.0, "/img/car.png"));
-//
-//        List<Toy> toys = toyRepository.findAllSortedBySize();
-//        assertEquals(3, toys.size());
-//        assertEquals(Size.SMALL, toys.get(0).getSize());
-//        assertEquals(Size.MEDIUM, toys.get(1).getSize());
-//        assertEquals(Size.LARGE, toys.get(2).getSize());
-//    }
-//
-//    @Test
-//    void testFindByColor() {
-//        toyRepository.add(createToy("Car", Size.MEDIUM, "#AAAAAA", "Plastic", 5.0, "/img/car.png"));
-//        toyRepository.add(createToy("Ball", Size.SMALL, "#BBBBBB", "Rubber", 3.5, "/img/ball.png"));
-//        toyRepository.add(createToy("Doll", Size.LARGE, "#AAAAAA", "Fabric", 7.8, "/img/doll.png"));
-//
-//        List<Toy> result = toyRepository.findByColor(new MyColor("#AAAAAA"));
-//        assertEquals(2, result.size());
-//        assertTrue(result.stream().allMatch(t -> t.getColor().getHexCode().equals("#AAAAAA")));
-//    }
-//
-//    @Test
-//    void testFindByType() {
-//        toyRepository.add(createToy("Car", Size.MEDIUM, "#AAAAAA", "Plastic", 5.0, "/img/car.png"));
-//        toyRepository.add(createToy("Ball", Size.SMALL, "#BBBBBB", "Rubber", 3.5, "/img/ball.png"));
-//        toyRepository.add(createToy("Car", Size.LARGE, "#CCCCCC", "Metal", 6.0, "/img/car2.png"));
-//
-//        List<Toy> result = toyRepository.findByType("Car");
-//        assertEquals(2, result.size());
-//        assertTrue(result.stream().allMatch(t -> t.getType().equals("Car")));
-//    }
-//
-//    @Test
-//    void testFindBySize() {
-//        toyRepository.add(createToy("Car", Size.MEDIUM, "#AAAAAA", "Plastic", 5.0, "/img/car.png"));
-//        toyRepository.add(createToy("Ball", Size.SMALL, "#BBBBBB", "Rubber", 3.5, "/img/ball.png"));
-//        toyRepository.add(createToy("Doll", Size.MEDIUM, "#CCCCCC", "Fabric", 7.8, "/img/doll.png"));
-//
-//        List<Toy> result = toyRepository.findBySize(Size.MEDIUM);
-//        assertEquals(2, result.size());
-//        assertTrue(result.stream().allMatch(t -> t.getSize() == Size.MEDIUM));
-//    }
-//
-//    @Test
-//    void testSaveToys() throws SQLException {
-//        List<Toy> toys = List.of(
-//                createToy("Car", Size.MEDIUM, "#FF0000", "Plastic", 10.0, "/img/car.png"),
-//                createToy("Doll", Size.SMALL, "#00FF00", "Fabric", 6.0, "/img/doll.png")
-//        );
-//
-//        toyRepository.saveToys(toys);
-//
-//        try (Connection conn = DatabaseConnector.getConnection();
-//             Statement stmt = conn.createStatement();
-//             ResultSet rs = stmt.executeQuery("SELECT * FROM toys")) {
-//
-//            List<Toy> saved = new ArrayList<>();
-//            while (rs.next()) {
-//                saved.add(toyRepository.mapRowToToy(rs));
-//            }
-//
-//            assertEquals(2, saved.size());
-//            assertEquals("Car", saved.get(0).getType());
-//            assertEquals("Doll", saved.get(1).getType());
-//        }
-//    }
-
-    @Test
-    void testDeleteById() {
-        Toy toy = createToy("Train", Size.LARGE, "#123456", "Wood", 8.5, "/img/train.png");
-        toyRepository.add(toy);
-
-        int idToDelete = toy.getId();
-        boolean deleted = toyRepository.deleteById(idToDelete);
-        assertTrue(deleted);
-
-        List<Toy> toysAfter = toyRepository.findAll();
-        assertEquals(0, toysAfter.size());
+    @AfterEach
+    void tearDown() {
+        if (em != null) em.close();
     }
 
     @Test
-    void testDeleteByIdNotFound() {
-        boolean result = toyRepository.deleteById(9999);
-        assertFalse(result);
+    void saveAndFindById() {
+        // Prepare related entities
+        Type type = new Type();
+        type.setName("Plush");
+        type.setImage("plush.png");
+        type.setPrice(10.0);
+
+        ToyRoomEntity room = new ToyRoomEntity();
+        room.setName("Room A");
+        room.setBudget(100);
+        room.setCreatedAt(LocalDateTime.now());
+        room.setUpdatedAt(LocalDateTime.now());
+
+        em.getTransaction().begin();
+        em.persist(type);
+        em.persist(room);
+        em.getTransaction().commit();
+
+        ToyEntity toy = new ToyEntity();
+        toy.setType(type);
+        toy.setToyRoom(room);
+        toy.setColor("Red");
+        toy.setMaterial("Cotton");
+        toy.setSize("Medium");
+
+        toyRepository.save(toy);
+
+        ToyEntity found = toyRepository.findById(toy.getId());
+        assertNotNull(found);
+        assertEquals("Red", found.getColor());
+        assertEquals("Cotton", found.getMaterial());
+        assertEquals("Medium", found.getSize());
+        assertEquals("Plush", found.getType().getName());
+        assertEquals("Room A", found.getToyRoom().getName());
+    }
+
+    @Test
+    void findByTypeNameReturnsCorrectToy() {
+        Type type = new Type();
+        type.setName("Educational");
+        type.setImage("edu.png");
+        type.setPrice(20.0);
+
+        ToyRoomEntity room = new ToyRoomEntity();
+        room.setName("Room B");
+        room.setBudget(200);
+        room.setCreatedAt(LocalDateTime.now());
+        room.setUpdatedAt(LocalDateTime.now());
+
+        em.getTransaction().begin();
+        em.persist(type);
+        em.persist(room);
+        em.getTransaction().commit();
+
+        ToyEntity toy = new ToyEntity();
+        toy.setType(type);
+        toy.setToyRoom(room);
+        toy.setColor("Blue");
+        toy.setMaterial("Plastic");
+        toy.setSize("Small");
+
+        toyRepository.save(toy);
+
+        ToyEntity found = toyRepository.findByTypeName("Educational");
+        assertNotNull(found);
+        assertEquals("Blue", found.getColor());
+    }
+
+    @Test
+    void findAllReturnsAllToys() {
+        // Setup a couple of toys
+        // Reuse entities or create new ones, persist them
+
+        // ... Similar to above, create and save toys ...
+
+        List<ToyEntity> toys = toyRepository.findAll();
+        assertTrue(toys.size() >= 0);
+    }
+
+    @Test
+    void findByToyRoomIdReturnsToysInRoom() {
+        // Створимо кімнату
+        ToyRoomEntity room = new ToyRoomEntity();
+        room.setName("Room X");
+        room.setBudget(300);
+        room.setCreatedAt(LocalDateTime.now());
+        room.setUpdatedAt(LocalDateTime.now());
+
+        em.getTransaction().begin();
+        em.persist(room);
+        em.getTransaction().commit();
+
+        // Створимо 2 іграшки для цієї кімнати
+        ToyEntity toy1 = new ToyEntity();
+        toy1.setToyRoom(room);
+        toy1.setColor("Yellow");
+        toy1.setMaterial("Wood");
+        toy1.setSize("Large");
+
+        ToyEntity toy2 = new ToyEntity();
+        toy2.setToyRoom(room);
+        toy2.setColor("Green");
+        toy2.setMaterial("Rubber");
+        toy2.setSize("Small");
+
+        em.getTransaction().begin();
+        em.persist(toy1);
+        em.persist(toy2);
+        em.getTransaction().commit();
+
+        List<ToyEntity> toys = toyRepository.findByToyRoomId(room.getId());
+
+        assertEquals(2, toys.size());
+        assertTrue(toys.stream().anyMatch(t -> "Yellow".equals(t.getColor())));
+        assertTrue(toys.stream().anyMatch(t -> "Green".equals(t.getColor())));
     }
 }

@@ -1,11 +1,11 @@
 package org.example.toyroom.service;
 
-import org.example.toyroom.entity.ToyEntity;
-import org.example.toyroom.entity.Type;
-import org.example.toyroom.mapper.ToyMapper;
+import org.example.entity.ToyEntity;
+import org.example.entity.Type;
+import org.example.toyroom.mappers.ToyMapper;
 import org.example.toyroom.models.ToyRoom;
 import org.example.toyroom.models.Toy;
-import org.example.toyroom.repository.ToyRepository;
+import org.example.repository.ToyRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,25 +18,25 @@ public class ToyService {
     private static final Logger logger = LoggerFactory.getLogger(ToyService.class);
 
     private final ToyRepository repository;
-//    private ToyRoom toyRoom;
+    private ToyMapper toyMapper;
 
-    public ToyService(ToyRepository repository) {
-        this.repository = repository;
+    public void setMapper(ToyMapper toyMapper) {
+        this.toyMapper = toyMapper;
     }
 
-    public ToyService(ToyRoom toyRoom, ToyRepository toyRepository) {
-//        this.toyRoom = toyRoom;
-        this.repository = toyRepository;
+    public ToyService(ToyRepository repository, ToyMapper toyMapper) {
+        this.repository = repository;
+        this.toyMapper = toyMapper;
     }
 
     public void saveToy(Toy toy, Type type) {
-        ToyEntity entity = ToyMapper.toEntity(toy);
+        ToyEntity entity = toyMapper.toEntity(toy);
         repository.save(entity);
     }
 
     public Toy getById(Long id) {
         ToyEntity entity = repository.findById(id);
-        Toy toy = ToyMapper.toModel(entity);
+        Toy toy = toyMapper.toModel(entity);
         return toy;
     }
 
@@ -44,7 +44,7 @@ public class ToyService {
         List<Toy> toys = new ArrayList<>();
         List<ToyEntity> entities = repository.findAll();
         for (ToyEntity entity : entities) {
-            Toy toy = ToyMapper.toModel(entity);
+            Toy toy = toyMapper.toModel(entity);
             toys.add(toy);
         }
         return toys;
@@ -54,7 +54,7 @@ public class ToyService {
         List<ToyEntity> entities = repository.findByToyRoomId(toyRoomId);
         List<Toy> toys = new ArrayList<>();
         for (ToyEntity entity : entities) {
-            Toy toy = ToyMapper.toModel(entity);
+            Toy toy = toyMapper.toModel(entity);
             toys.add(toy);
         }
         return toys;
@@ -62,7 +62,7 @@ public class ToyService {
 
     public Toy getToyByTypeName(String typeName) {
         ToyEntity toyEntity = repository.findByTypeName(typeName);
-        return ToyMapper.toModel(toyEntity);
+        return toyMapper.toModel(toyEntity);
     }
 
     public void deleteById(Long id) {
@@ -72,7 +72,7 @@ public class ToyService {
     public boolean buyToy(Toy toy,ToyRoom room) {
         double currentBudget = room.getBudget();
         if (currentBudget >= toy.getPrice()) {
-            repository.save(ToyMapper.toEntity(toy));
+            repository.save(toyMapper.toEntity(toy));
             room.setBudget(currentBudget - toy.getPrice());
             return true; // success
         } else {

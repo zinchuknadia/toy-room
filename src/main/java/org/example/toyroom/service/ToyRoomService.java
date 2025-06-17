@@ -1,11 +1,10 @@
 package org.example.toyroom.service;
 
-import org.example.toyroom.entity.Theme;
-import org.example.toyroom.entity.ToyRoomEntity;
-import org.example.toyroom.mapper.ToyRoomMapper;
-import org.example.toyroom.models.Toy;
+import org.example.entity.Theme;
+import org.example.entity.ToyRoomEntity;
+import org.example.toyroom.mappers.ToyRoomMapper;
 import org.example.toyroom.models.ToyRoom;
-import org.example.toyroom.repository.ToyRoomRepository;
+import org.example.repository.ToyRoomRepository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -15,9 +14,15 @@ import java.util.stream.Collectors;
 
 public class ToyRoomService {
     private final ToyRoomRepository repository;
+    private ToyRoomMapper mapper;
 
-    public ToyRoomService(ToyRoomRepository repository) {
+    public void setMapper(ToyRoomMapper toyRoomMapper) {
+        this.mapper = toyRoomMapper;
+    }
+
+    public ToyRoomService(ToyRoomRepository repository, ToyRoomMapper mapper) {
         this.repository = repository;
+        this.mapper = mapper;
     }
 
     public void createToyRoom(String name, Theme theme, double budget) {
@@ -27,12 +32,12 @@ public class ToyRoomService {
         room.setBudget(budget);
         room.setCreatedAt(LocalDateTime.now());
         room.setUpdatedAt(LocalDateTime.now());
-        repository.save(room);
+        repository.saveOrUpdate(room);
     }
 
     public void saveToyRoom(ToyRoom room) {
-        ToyRoomEntity toyRoomEntity = ToyRoomMapper.toEntity(room);
-        repository.save(toyRoomEntity);
+        ToyRoomEntity toyRoomEntity = mapper.toEntity(room);
+        repository.saveOrUpdate(toyRoomEntity);
     }
 
     public ToyRoomEntity getById(Long id) {
@@ -43,7 +48,7 @@ public class ToyRoomService {
         List<ToyRoomEntity> toyRoomEntities = repository.findAll();
         List<ToyRoom> toyRooms= new ArrayList<>();
         for (ToyRoomEntity room : toyRoomEntities) {
-            ToyRoom toyRoom = ToyRoomMapper.toModel(room);
+            ToyRoom toyRoom = mapper.toModel(room);
             toyRooms.add(toyRoom);
         }
         return toyRooms;
@@ -61,14 +66,14 @@ public class ToyRoomService {
         ToyRoomEntity toyRoom = repository.findById(id);
         if (toyRoom != null) {
             toyRoom.setUpdatedAt(LocalDateTime.now());
-            repository.save(toyRoom);
+            repository.saveOrUpdate(toyRoom);
         }
     }
 
     public void updateToyRoom(ToyRoom toyRoom) {
-        ToyRoomEntity entity = ToyRoomMapper.toEntity(toyRoom);
+        ToyRoomEntity entity = mapper.toEntity(toyRoom);
         entity.setUpdatedAt(LocalDateTime.now());
-        repository.updateToyRoom(entity);
+        repository.saveOrUpdate(entity);
     }
 
     public List<ToyRoom> getSortedToyRooms(List<String> sortCriteria) {
@@ -96,4 +101,5 @@ public class ToyRoomService {
 //                .map(ToyMapper::toModel)
 //                .collect(Collectors.toList());
     }
+
 }

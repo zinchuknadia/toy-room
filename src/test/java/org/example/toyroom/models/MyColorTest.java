@@ -1,41 +1,45 @@
 package org.example.toyroom.models;
 
 import org.junit.jupiter.api.Test;
-
+import java.awt.Color;
 import static org.junit.jupiter.api.Assertions.*;
 
 class MyColorTest {
 
     @Test
-    void testConstructorAddsHash() {
-        MyColor color = new MyColor("FF0000");
-        assertEquals("#FF0000", color.getHexCode());
+    void constructor_shouldNormalizeHexCode() {
+        MyColor color1 = new MyColor("#123456");
+        assertEquals("#123456", color1.getHexCode());
+
+        MyColor color2 = new MyColor("123456");
+        assertEquals("#123456", color2.getHexCode());
     }
 
     @Test
-    void testConstructorKeepsHash() {
-        MyColor color = new MyColor("#00FF00");
-        assertEquals("#00FF00", color.getHexCode());
+    void toAwtColor_shouldReturnCorrectColor() {
+        MyColor myColor = new MyColor("#FF0000");
+        Color awtColor = myColor.toAwtColor();
+        assertEquals(Color.RED.getRed(), awtColor.getRed());
+        assertEquals(Color.RED.getGreen(), awtColor.getGreen());
+        assertEquals(Color.RED.getBlue(), awtColor.getBlue());
     }
 
     @Test
-    void testGetHexCode() {
-        MyColor color = new MyColor("0000FF");
-        assertEquals("#0000FF", color.getHexCode());
+    void equals_and_hashCode_shouldBehaveCorrectly() {
+        MyColor c1 = new MyColor("#abcdef");
+        MyColor c2 = new MyColor("abcdef");
+        MyColor c3 = new MyColor("#123456");
+
+        assertEquals(c1, c2);
+        assertEquals(c1.hashCode(), c2.hashCode());
+
+        assertNotEquals(c1, c3);
+        assertNotEquals(c1.hashCode(), c3.hashCode());
     }
 
     @Test
-    void testToAwtColor() {
-        MyColor color = new MyColor("FF00FF");
-        java.awt.Color awtColor = color.toAwtColor();
-        assertEquals(255, awtColor.getRed());
-        assertEquals(0, awtColor.getGreen());
-        assertEquals(255, awtColor.getBlue());
-    }
-
-    @Test
-    void testToString() {
-        MyColor color = new MyColor("CCCCCC");
-        assertEquals("#CCCCCC", color.toString());
+    void toString_shouldReturnHexCode() {
+        MyColor c = new MyColor("#789abc");
+        assertEquals("#789abc", c.toString());
     }
 }

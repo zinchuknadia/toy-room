@@ -11,6 +11,7 @@ import org.example.toyroom.models.Toy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -32,14 +33,14 @@ public class ToyCardController {
         materialLabel.setText("Material: " + toy.getMaterial());
         priceLabel.setText("Price: $" + toy.getPrice());
 
-        if (toy.getImagePath() != null) {
-            var url = getClass().getResource(toy.getImagePath());
-            if (url != null) {
-                toyImage.setImage(new Image(url.toExternalForm()));
-            } else {
-                System.out.println("Image not found at: " + toy.getImagePath());
-                logger.error("Image not found at: " + toy.getImagePath());
-            }
+        String imageFileName = toy.getImagePath();
+        File imageFile = new File("user-data/images/types", imageFileName);
+
+        if (imageFile.exists()) {
+            Image image = new Image(imageFile.toURI().toString());
+            toyImage.setImage(image);
+        } else {
+            System.out.println("Image not found: " + imageFile.getAbsolutePath());
         }
 
         if (toy.getColor() != null) {
@@ -47,15 +48,6 @@ public class ToyCardController {
             String hex = color.getHexCode();
             cardBox.setStyle("-fx-border-color: " + hex + ";");
         }
-
-//        ContextMenu menu = new ContextMenu();
-//        menu.getStyleClass().add("toy-context-menu");
-//
-//        MenuItem deleteItem = new MenuItem("Delete");
-//        deleteItem.getStyleClass().add("delete-menu-item");
-//
-//        deleteItem.setOnAction(e -> onDelete.run());
-//        menu.getItems().add(deleteItem);
 
         menuButton.setOnMouseClicked(e -> {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -68,9 +60,5 @@ public class ToyCardController {
                 onDelete.run(); // тільки якщо користувач натиснув OK
             }
         });
-//        {
-//            if (menu.isShowing()) menu.hide();
-//            else menu.show(menuButton, Side.BOTTOM, 0, 0);
-//        });
     }
 }

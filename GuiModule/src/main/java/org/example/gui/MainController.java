@@ -11,38 +11,76 @@ import javafx.scene.control.*;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.example.gui.toyRoom.MenuViewController;
+import org.example.toyroom.factory.ToyFactory;
+import org.example.toyroom.mappers.ToyMapper;
+import org.example.toyroom.mappers.ToyRoomMapper;
 import org.example.toyroom.models.ToyRoom;
 import org.example.toyroom.models.ToyRoomManager;
-import org.example.toyroom.repository.ToyRepository;
-import org.example.toyroom.repository.ToyRoomRepository;
+import org.example.repository.ThemeRepository;
+import org.example.repository.ToyRepository;
+import org.example.repository.ToyRoomRepository;
+import org.example.repository.TypeRepository;
+import org.example.toyroom.service.ThemeService;
 import org.example.toyroom.service.ToyRoomService;
 import org.example.toyroom.service.ToyService;
+import org.example.toyroom.service.TypeService;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainController {
-    public MenuButton sortMenuButton;
+
     @FXML private ScrollPane scrollPane;
     @FXML private GridPane toyRoomGrid;
+    public MenuButton sortMenuButton;
 
     private ToyRoomManager manager = new ToyRoomManager();
-    private EntityManager em;
-    private ToyRoomService toyRoomService;
-    private final List<String> selectedSorts = new ArrayList<>();
 
+    private EntityManagerFactory emf;
+    private EntityManager em;
+
+    private ToyRoomService toyRoomService;
+    private ToyService toyService;
+    private ThemeService themeService;
+    private TypeService typeService;
+
+    private ToyMapper toyMapper;
+    private ToyRoomMapper toyRoomMapper;
+
+    private final List<String> selectedSorts = new ArrayList<>();
 
     @FXML
     public void initialize() {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("toyroomPU");
+        // 1. Create EntityManager
+        emf = Persistence.createEntityManagerFactory("toyroomPU");
         em = emf.createEntityManager();
-        toyRoomService = new ToyRoomService(new ToyRoomRepository(em));
 
+        // 2. Create repositories
+        ThemeRepository themeRepository = new ThemeRepository(em);
+        ToyRepository toyRepository = new ToyRepository(em);
+        ToyRoomRepository toyRoomRepository = new ToyRoomRepository(em);
+        TypeRepository typeRepository = new TypeRepository(em);
+
+        // 3. Create services
+        themeService = new ThemeService(themeRepository);
+        typeService = new TypeService(typeRepository);
+
+        toyService = new ToyService(toyRepository, null);  // Pass mapper later
+        toyRoomService = new ToyRoomService(toyRoomRepository, null);  // Pass mapper later
+
+        // 4. Create mappers - pass services needed
+        toyMapper = new ToyMapper(toyRoomService, typeService, new ToyFactory(typeService));
+        toyRoomMapper = new ToyRoomMapper(themeService, toyService, toyMapper);
+
+        // 5. Inject mappers into services (if needed)
+        // (If you have setters or constructors that accept mappers)
+        toyService.setMapper(toyMapper); // or recreate toyService with mapper param
+        toyRoomService.setMapper(toyRoomMapper);
+
+        // 6. Init UI
         initSortMenu();
         loadToyRoomsFromDB();
     }
@@ -50,16 +88,6 @@ public class MainController {
     private void initSortMenu() {
         ToggleGroup sortGroup = new ToggleGroup();
         String[] options = {"size", "budget", "last modified"};
-
-//        RadioMenuItem noneItem = new RadioMenuItem("None");
-//        noneItem.setToggleGroup(sortGroup);
-////        noneItem.setSelected(true); // default
-//        noneItem.setOnAction(e -> {
-//            selectedSorts.clear();
-//            sortMenuButton.setText("Sort"); // Reset label
-//            loadToyRoomsFromDB();
-//        });
-//        sortMenuButton.getItems().add(noneItem);
 
         for (String opt : options) {
             RadioMenuItem item = new RadioMenuItem(capitalize(opt));
@@ -101,7 +129,7 @@ public class MainController {
                 toyRoomService.deleteById(room.getId());
                 loadToyRoomsFromDB();
             });
-            card.setOnMouseClicked(e -> openToyRoomViewInSameWindow(room, new ToyService(new ToyRepository(em))));
+            card.setOnMouseClicked(e -> openToyRoomViewInSameWindow(room, new ToyService(new ToyRepository(em), toyMapper)));
             toyRoomGrid.add(card, col++, row);
             manager.addToyRoom(room);
 
@@ -110,19 +138,6 @@ public class MainController {
                 row++;
             }
         }
-    }
-
-    private VBox createToyRoomCard(ToyRoom toyRoom) {
-        VBox box = new VBox(5);
-        box.setStyle("-fx-border-color: #ccc; -fx-border-radius: 10; -fx-padding: 10; -fx-background-radius: 10; -fx-background-color: #f9f9f9;");
-        box.setOnMouseClicked(e -> openToyRoomViewInSameWindow(toyRoom, new ToyService(new ToyRepository(em))));
-
-        Text nameText = new Text("Name: " + toyRoom.getName());
-        Text themeText = new Text("Theme: " + toyRoom.getThemeName());
-        Text budgetText = new Text("Budget: " + toyRoom.getBudget());
-
-        box.getChildren().addAll(nameText, themeText, budgetText);
-        return box;
     }
 
     @FXML
@@ -153,7 +168,9 @@ public class MainController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/gui/toyRoom/MenuView.fxml"));
             Parent root = loader.load();
             MenuViewController controller = loader.getController();
+
             controller.setToyRoomAndService(toyRoom, toyService);
+            controller.setServices(toyRoomService, themeService, typeService);
 
             scrollPane.getScene().setRoot(root);
         } catch (IOException e) {
@@ -163,7 +180,7 @@ public class MainController {
 
     public void handleMore(ActionEvent actionEvent) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/gui/MoreOptionsView.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/gui/more/MoreOptionsView.fxml"));
             Parent root = loader.load();
 
             Stage stage = new Stage();

@@ -1,26 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 
 <BorderPane fx:controller="org.example.gui.toyRoom.AddToyController"
             xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/21.0.7"
             stylesheets="@../styles.css">
 
-    <center>
-        <VBox spacing="10" alignment="CENTER" maxWidth="300" prefWidth="300">
+    <!-- Top title -->
+    <top>
+        <VBox alignment="CENTER">
             <padding>
-                <Insets top="40" right="20" bottom="20" left="20"/>
+                <Insets top="40" right="20" bottom="5" left="20"/>
             </padding>
 
             <Label text="Add New Toy" styleClass="form-title"/>
+        </VBox>
+    </top>
 
-            <ComboBox fx:id="typeComboBox" promptText="Select toy type" styleClass="form-control"/>
-            <ComboBox fx:id="sizeComboBox" promptText="Select size" styleClass="form-control"/>
-            <ColorPicker fx:id="colorPicker" styleClass="form-control"/>
-            <TextField fx:id="materialField" promptText="Material" styleClass="form-control"/>
+    <!-- Main content: image + form side by side -->
+    <center>
+        <HBox spacing="30" alignment="CENTER">
+            <padding>
+                <Insets top="10" right="20" bottom="10" left="20"/>
+            </padding>
+
+            <!-- Image preview -->
+            <ImageView fx:id="toyImagePreview"
+                       fitWidth="200" fitHeight="200"
+                       preserveRatio="true">
+                <image>
+                    <Image url="@/images/default.png"/>
+                </image>
+            </ImageView>
+
+            <!-- Form inputs -->
+            <VBox spacing="10" maxWidth="300" prefWidth="300" alignment="CENTER_LEFT">
+                <ComboBox fx:id="typeComboBox" promptText="Select toy type" styleClass="form-control"/>
+                <ComboBox fx:id="sizeComboBox" promptText="Select size" styleClass="form-control"/>
+                <ColorPicker fx:id="colorPicker" styleClass="form-control"/>
+                <TextField fx:id="materialField" promptText="Material" styleClass="form-control"/>
+                </VBox>
+        </HBox>
+    </center>
+
+    <bottom>
+        <VBox spacing="10" alignment="CENTER">
             <Label fx:id="priceLabel" text="Price: $" styleClass="price-label"/>
             <Button text="Add Toy" onAction="#handleAddToy" styleClass="form-button"/>
+
+            <padding>
+                <Insets top="5" right="20" bottom="40" left="20"/>
+            </padding>
         </VBox>
-    </center>
+    </bottom>
 </BorderPane>

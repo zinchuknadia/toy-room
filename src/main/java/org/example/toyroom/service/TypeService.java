@@ -1,10 +1,9 @@
 package org.example.toyroom.service;
 
-import org.example.toyroom.entity.Theme;
-import org.example.toyroom.entity.Type;
-import org.example.toyroom.mapper.TypeMapper;
+import org.example.entity.Type;
+import org.example.toyroom.mappers.TypeMapper;
 import org.example.toyroom.models.TypeInfo;
-import org.example.toyroom.repository.TypeRepository;
+import org.example.repository.TypeRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -43,7 +42,15 @@ public class TypeService {
         return repository.findByName(name);
     }
 
-    public void deleteById(Long id) {
-        repository.deleteById(id);
+    public boolean deleteById(Long id) {
+        if(repository.deleteById(id)){
+            return true;
+        }
+        return false;
+    }
+
+    public void saveType(TypeInfo type) {
+        Type typeEntity = TypeMapper.toEntity(type);
+        repository.save(typeEntity);
     }
 }

@@ -1,18 +1,12 @@
 package org.example.gui.toyRoom;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import org.example.toyroom.entity.Theme;
 import org.example.toyroom.models.ToyRoom;
-import org.example.toyroom.repository.ThemeRepository;
-import org.example.toyroom.repository.ToyRoomRepository;
 import org.example.toyroom.service.ThemeService;
 import org.example.toyroom.service.ToyRoomService;
 import org.example.toyroom.service.ToyService;
@@ -25,43 +19,51 @@ import java.util.function.Consumer;
 public class ToyRoomSettingsController implements ToyRoomAware {
     private static final Logger logger = LoggerFactory.getLogger(ToyRoomSettingsController.class);
 
-    ToyRoom toyRoom;
+    private ToyRoom toyRoom;
+    private ToyRoomService toyRoomService;
+    private ThemeService themeService;
 
-    EntityManagerFactory emf = Persistence.createEntityManagerFactory("toyroomPU");
-    EntityManager em = emf.createEntityManager();
-    ToyRoomService toyRoomService;
-
-    @FXML
-    private TextField nameField;
-    @FXML
-    private ComboBox<String> themeComboBox;
-    @FXML
-    private Label currentBudgetLabel;
-    @FXML
-    private TextField amountField;
+    @FXML private TextField nameField;
+    @FXML private ComboBox<String> themeComboBox;
+    @FXML private Label currentBudgetLabel;
+    @FXML private TextField amountField;
 
     private double currentBudget = 0.0;
     private Consumer<Double> onBudgetChanged;
-
+    private Consumer<String> onNameChanged;
 
     @Override
     public void setToyRoomAndService(ToyRoom toyRoom, ToyService toyService) {
         this.toyRoom = toyRoom;
-        this.toyRoomService = new ToyRoomService(new ToyRoomRepository(em));
         this.currentBudget = toyRoom.getBudget();
-        ThemeService themeService = new ThemeService(new ThemeRepository(em));
+
+        // Instead of creating EntityManager here, pass services externally
+        // So we assume this method will be updated to also receive toyRoomService and themeService
+        // See below in loader/controller setup
+    }
+
+    public void setServices(ToyRoomService toyRoomService, ThemeService themeService) {
+        this.toyRoomService = toyRoomService;
+        this.themeService = themeService;
+
+        // Now that services are set, we can populate UI
         themeComboBox.getItems().setAll(themeService.getAllThemeNames());
+
         if (toyRoom != null) {
             nameField.setText(toyRoom.getName());
             themeComboBox.setValue(toyRoom.getThemeName());
             amountField.setText(String.format("%.2f", currentBudget));
+            updateLabel();
         }
-        updateLabel();
     }
 
 
     private void updateLabel() {
         currentBudgetLabel.setText(String.format("Budget:", currentBudget));
+    }
+
+    public void setOnNameChanged(Consumer<String> onNameChanged) {
+        this.onNameChanged = onNameChanged;
     }
 
     public void handleAdd() {
@@ -79,12 +81,7 @@ public class ToyRoomSettingsController implements ToyRoomAware {
                 amountField.setStyle("-fx-border-color: red;");
                 return;
             }
-            if (add) {
-                currentBudget += amount;
-            } else {
-                currentBudget -= amount;
-            }
-
+            currentBudget = add ? currentBudget + amount : currentBudget - amount;
             toyRoom.setBudget(currentBudget);
             updateLabel();
             amountField.clear();
@@ -93,6 +90,7 @@ public class ToyRoomSettingsController implements ToyRoomAware {
             if (onBudgetChanged != null) {
                 onBudgetChanged.accept(currentBudget);
             }
+
             toyRoomService.updateBudget(toyRoom);
             toyRoomService.updateUpdatedAt(toyRoom.getId());
         } catch (NumberFormatException e) {
@@ -107,15 +105,12 @@ public class ToyRoomSettingsController implements ToyRoomAware {
             String name = nameField.getText();
             String theme = themeComboBox.getValue();
             double budget = Double.parseDouble(amountField.getText().replace(",", "."));
-//            int capacity = Integer.parseInt(capacityField.getText());
 
             toyRoom.setName(name);
             toyRoom.setThemeName(theme);
             toyRoom.setBudget(budget);
-//            toyRoom.setMaxCapacity(capacity);
 
             toyRoomService.updateToyRoom(toyRoom);
-//            showAlert("Success", "Toy Room settings saved successfully.", Alert.AlertType.INFORMATION);
 
         } catch (NumberFormatException e) {
             showAlert("Error", "Capacity must be a number.", Alert.AlertType.ERROR);

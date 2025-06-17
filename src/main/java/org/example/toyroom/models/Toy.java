@@ -15,21 +15,13 @@ public class Toy {
 
     public Toy() {}
 
-    public Toy(String type, Size size, MyColor color, String material, String imagePath) {
+    public Toy(Long id, Long roomId, String type, Size size, MyColor color, String material) {
+        this.id = id;
+        this.roomId = roomId;
         this.type.set(type);
         this.size.set(size);
         this.color.set(color);
         this.material.set(material);
-        this.imagePath = imagePath;
-    }
-
-    public Toy(String type, Size size, MyColor color, String material, Double price, String imagePath) {
-        this.type.set(type);
-        this.size.set(size);
-        this.color.set(color);
-        this.material.set(material);
-        this.price.set(price);
-        this.imagePath = imagePath;
     }
 
     public Toy(String type, Size size, MyColor color, String material) {

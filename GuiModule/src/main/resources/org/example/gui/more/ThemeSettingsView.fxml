@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.geometry.Insets?>
+
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.example.gui.more.ThemeSettingsController"
+            prefWidth="500" prefHeight="400"
+            stylesheets="@../styles.css">
+
+    <top>
+        <HBox alignment="CENTER" spacing="10" BorderPane.alignment="TOP_CENTER"
+              style="-fx-padding: 10;">
+
+            <Button text="← Back" onAction="#handleBack"/>
+
+            <Region HBox.hgrow="ALWAYS"/> <!-- Pushes the next button to the right -->
+
+            <Button text="+ Add Theme" onAction="#handleAddTheme" styleClass="form-button"/>
+        </HBox>
+    </top>
+
+    <center>
+        <ScrollPane fx:id="scrollPane" fitToWidth="true">
+            <GridPane fx:id="themeGrid" hgap="10" vgap="10" style="-fx-padding: 10;"/>
+        </ScrollPane>
+    </center>
+
+</BorderPane>
